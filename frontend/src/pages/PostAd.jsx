@@ -105,7 +105,9 @@ const PostAd = () => {
         navigate('/dashboard');
       }, 2000);
     } catch (err) {
-      setError(err.response?.data?.message || 'Error posting ad');
+      console.error('Post Ad Error:', err);
+      const msg = err.response?.data?.message || err.response?.data?.error || err.message || 'Error posting ad';
+      setError(msg);
     }
   };
 

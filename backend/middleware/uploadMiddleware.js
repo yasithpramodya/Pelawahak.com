@@ -36,7 +36,6 @@ if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && proces
   storage = multerS3({
     s3: s3,
     bucket: process.env.AWS_BUCKET_NAME,
-    acl: 'public-read',
     contentType: multerS3.AUTO_CONTENT_TYPE,
     metadata: function (req, file, cb) {
       cb(null, { fieldName: file.fieldname });
@@ -49,7 +48,7 @@ if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && proces
   console.log('ℹ️  Using Local Storage (Fallback)');
   storage = multer.diskStorage({
     destination(req, file, cb) {
-      cb(null, 'uploads/');
+      cb(null, path.join(__dirname, '../uploads'));
     },
     filename(req, file, cb) {
       cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);

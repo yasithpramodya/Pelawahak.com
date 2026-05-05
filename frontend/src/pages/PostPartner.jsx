@@ -71,7 +71,9 @@ const PostPartner = () => {
       await api.post('/partners', data);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Error creating profile');
+      console.error('Post Partner Error:', err);
+      const msg = err.response?.data?.message || err.response?.data?.error || err.message || 'Error creating profile';
+      setError(msg);
     } finally {
       setLoading(false);
     }

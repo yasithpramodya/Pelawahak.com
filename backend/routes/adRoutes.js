@@ -44,6 +44,7 @@ router.post('/', protect, upload.array('images', 5), async (req, res) => {
 
     res.status(201).json(ad);
   } catch (error) {
+    console.error('Error creating ad:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
