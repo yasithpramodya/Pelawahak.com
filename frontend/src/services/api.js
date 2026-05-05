@@ -1,8 +1,16 @@
 import axios from 'axios';
 
+export const BASE_URL = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000';
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+  baseURL: import.meta.env.VITE_API_URL || `${BASE_URL}/api`,
 });
+
+export const getImageUrl = (path) => {
+  if (!path) return 'https://via.placeholder.com/400x600?text=No+Image';
+  if (path.startsWith('http')) return path;
+  return `${BASE_URL}${path.startsWith('/') ? '' : '/'}${path}`;
+};
 
 // Attach JWT to every request
 api.interceptors.request.use(

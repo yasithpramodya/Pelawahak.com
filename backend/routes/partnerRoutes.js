@@ -3,33 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Partner = require('../models/Partner');
 const { protect } = require('../middleware/authMiddleware');
-const multer = require('multer');
-const path = require('path');
-
-// Multer config for image uploads
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename(req, file, cb) {
-    cb(null, `partner-${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
-  }
-});
-
-const upload = multer({
-  storage,
-  fileFilter: function (req, file, cb) {
-    const filetypes = /jpg|jpeg|png|webp/;
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = filetypes.test(file.mimetype);
-
-    if (mimetype && extname) {
-      return cb(null, true);
-    } else {
-      cb('Images only!');
-    }
-  }
-});
+const upload = require('../middleware/uploadMiddleware');
 
 // @desc    Create a new partner profile
 // @route   POST /api/partners
@@ -40,7 +14,7 @@ router.post('/', protect, upload.array('images', 3), async (req, res) => {
     
     let imagePaths = [];
     if (req.files) {
-      imagePaths = req.files.map(file => `/uploads/${file.filename}`);
+      imagePaths = req.files.map(file => file.location || `/uploads/${file.filename}`);
     }
 
     const partner = await Partner.create({

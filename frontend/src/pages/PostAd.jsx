@@ -94,11 +94,7 @@ const PostAd = () => {
     });
 
     try {
-      await api.post('/ads', data, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
+      await api.post('/ads', data);
       
       // Update local storage to decrement ad count
       const updatedUser = { ...user, freeAdsRemaining: user.freeAdsRemaining - 1 };
@@ -116,50 +112,50 @@ const PostAd = () => {
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 md:py-16 animate-fadeIn">
       <div className="mb-10 md:mb-14">
-        <h2 className="text-3xl md:text-5xl font-black text-wedding-brown uppercase tracking-tighter leading-none mb-4">Partner <span className="text-wedding-gold">Registry</span></h2>
-        <p className="text-wedding-brown/70 font-black uppercase tracking-widest text-[10px] italic">Establish a sophisticated profile for matrimonial matching</p>
+        <h2 className="text-3xl md:text-5xl font-black text-near-black uppercase tracking-tighter leading-none mb-4">Ad <span className="text-primary-rose">Registry</span></h2>
+        <p className="text-dark-grey/70 font-black uppercase tracking-widest text-[10px] italic">Showcase your professional wedding services</p>
       </div>
 
 
       {user.role === 'user' && (
-        <div className="bg-wedding-cream border border-wedding-gold/20 text-wedding-brown p-6 rounded-[2rem] mb-10 flex items-center justify-between shadow-sm">
+        <div className="bg-warm-white border border-light-grey/20 text-near-black p-6 rounded-[2rem] mb-10 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-4">
              <span className="text-2xl">✨</span>
              <div>
                 <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Membership Usage</p>
-                <p className="font-black text-xs uppercase tracking-tight">You have <span className="text-wedding-gold text-lg">{user.freeAdsRemaining}</span> free ad(s) remaining.</p>
+                <p className="font-black text-xs uppercase tracking-tight">You have <span className="text-primary-rose text-lg">{user.freeAdsRemaining}</span> free ad(s) remaining.</p>
              </div>
           </div>
         </div>
       )}
 
       {error && <div className="bg-red-50 border border-red-100 text-red-600 p-6 rounded-[2rem] mb-10 text-xs font-black uppercase tracking-widest text-center shadow-lg shadow-red-100/50">❌ {error}</div>}
-      {success && <div className="bg-wedding-gold/10 border border-wedding-gold/20 text-wedding-brown p-6 rounded-[2rem] mb-10 text-xs font-black uppercase tracking-widest text-center shadow-lg shadow-wedding-gold/20">✅ {success}</div>}
+      {success && <div className="bg-deep-rose/10 border border-light-grey/20 text-near-black p-6 rounded-[2rem] mb-10 text-xs font-black uppercase tracking-widest text-center shadow-lg shadow-primary-rose/20">✅ {success}</div>}
       
-      <form onSubmit={handleSubmit} className="bg-white p-6 md:p-10 lg:p-14 rounded-[2rem] md:rounded-[4rem] shadow-2xl border border-wedding-gold/10 grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 relative overflow-hidden">
+      <form onSubmit={handleSubmit} className="bg-white p-6 md:p-10 lg:p-14 rounded-[2rem] md:rounded-[4rem] shadow-2xl border border-light-grey/10 grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 relative overflow-hidden">
         <div className="absolute top-0 right-0 p-10 opacity-5">
-           <span className="text-7xl md:text-9xl font-black text-wedding-gold rotate-12 inline-block">💍</span>
+           <span className="text-7xl md:text-9xl font-black text-primary-rose rotate-12 inline-block">💍</span>
         </div>
 
         <div className="space-y-8 md:space-y-10 relative z-10">
           <div className="space-y-4">
-            <label className="block text-[10px] font-black text-wedding-brown/60 uppercase tracking-[0.3em] ml-2">Profile Narrative (Title)</label>
+            <label className="block text-[10px] font-black text-dark-grey/60 uppercase tracking-[0.3em] ml-2">Profile Narrative (Title)</label>
 
                 <input 
                   type="text" 
                   name="title"
                   placeholder="e.g. Premium Cinematic Wedding Photography"
-                  className="w-full bg-wedding-cream/50 border-none rounded-2xl p-5 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all" 
+                  className="w-full bg-warm-white/50 border-none rounded-2xl p-5 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all" 
                   onChange={handleInputChange}
                   required 
                 />
               </div>
               <div className="space-y-4">
-                <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.2em] ml-2">Detailed Narrative (Description)</label>
+                <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.2em] ml-2">Detailed Narrative (Description)</label>
                 <textarea 
                   name="description"
                   placeholder="Describe your services, equipment, experience and packages..."
-                  className="w-full bg-wedding-cream/50 border-none rounded-3xl p-6 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all" 
+                  className="w-full bg-warm-white/50 border-none rounded-3xl p-6 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all" 
                   rows="6"
                   onChange={handleInputChange}
                   required 
@@ -168,8 +164,8 @@ const PostAd = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
-                  <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.2em] ml-2">Industry Category</label>
-                  <select name="category" className="w-full bg-wedding-cream/50 border-none rounded-2xl p-5 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all" onChange={handleInputChange}>
+                  <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.2em] ml-2">Industry Category</label>
+                  <select name="category" className="w-full bg-warm-white/50 border-none rounded-2xl p-5 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all" onChange={handleInputChange}>
                     <option value="Photography">Photography</option>
                     <option value="Catering">Catering</option>
                     <option value="Decoration">Decoration</option>
@@ -189,11 +185,11 @@ const PostAd = () => {
                   </select>
                 </div>
                 <div className="space-y-4">
-                  <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.2em] ml-2">Operating District</label>
+                  <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.2em] ml-2">Operating District</label>
                   <select 
                     name="district" 
                     value={formData.district}
-                    className="w-full bg-wedding-cream/50 border-none rounded-2xl p-5 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all" 
+                    className="w-full bg-warm-white/50 border-none rounded-2xl p-5 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all" 
                     onChange={handleInputChange}
                   >
                     {Object.keys(locations).map(district => (
@@ -205,11 +201,11 @@ const PostAd = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                  <div className="space-y-4">
-                    <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.2em] ml-2">Base Location (City)</label>
+                    <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.2em] ml-2">Base Location (City)</label>
                     <select 
                       name="city" 
                       value={formData.city}
-                      className="w-full bg-wedding-cream/50 border-none rounded-2xl p-5 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all" 
+                      className="w-full bg-warm-white/50 border-none rounded-2xl p-5 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all" 
                       onChange={handleInputChange}
                     >
                       {locations[formData.district].map(city => (
@@ -219,13 +215,13 @@ const PostAd = () => {
                     </select>
                   </div>
                   <div className="space-y-4">
-                    <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.2em] ml-2">Investment Range (Rs.)</label>
+                    <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.2em] ml-2">Investment Range (Rs.)</label>
                     <input 
                       type="number" 
                       name="price"
                       min="0"
                       placeholder="Start price e.g. 50000"
-                      className="w-full bg-wedding-cream/50 border-none rounded-2xl p-5 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all" 
+                      className="w-full bg-warm-white/50 border-none rounded-2xl p-5 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all" 
                       onChange={handleInputChange}
                       required 
                     />
@@ -234,12 +230,12 @@ const PostAd = () => {
               
               {isOtherCity && (
                 <div className="space-y-4 animate-fadeIn">
-                  <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.2em] ml-2">Specify Custom City</label>
+                  <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.2em] ml-2">Specify Custom City</label>
                   <input 
                     type="text" 
                     name="otherCity"
                     placeholder="Type your city name here"
-                    className="w-full bg-wedding-gold/10 border-2 border-wedding-gold/20 rounded-2xl p-5 text-sm font-black text-wedding-brown uppercase tracking-tight focus:ring-2 focus:ring-wedding-gold transition-all"
+                    className="w-full bg-deep-rose/10 border-2 border-light-grey/20 rounded-2xl p-5 text-sm font-black text-near-black uppercase tracking-tight focus:ring-2 focus:ring-primary-rose transition-all"
                     onChange={handleInputChange}
                     required 
                   />
@@ -247,14 +243,14 @@ const PostAd = () => {
               )}
 
               <div className="space-y-4">
-                <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.2em] ml-2">Verified Contact Number</label>
+                <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.2em] ml-2">Verified Contact Number</label>
                 <div className="relative">
-                   <span className="absolute left-5 top-1/2 -translate-y-1/2 text-wedding-gold text-lg">☎</span>
+                   <span className="absolute left-5 top-1/2 -translate-y-1/2 text-primary-rose text-lg">☎</span>
                    <input 
                     type="text" 
                     name="phone"
                     placeholder="071 234 5678"
-                    className="w-full bg-wedding-cream/50 border-none rounded-2xl p-5 pl-14 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all" 
+                    className="w-full bg-warm-white/50 border-none rounded-2xl p-5 pl-14 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all" 
                     onChange={handleInputChange}
                     required 
                   />
@@ -265,20 +261,20 @@ const PostAd = () => {
            {/* Right Column: Image Boxes */}
            <div className="w-full lg:w-96">
               <div className="mb-8">
-                <h3 className="text-[11px] font-black text-wedding-brown uppercase tracking-[0.4em] mb-2">Visual Portfolio</h3>
-                <p className="text-[10px] font-black text-wedding-brown/60 uppercase tracking-widest italic leading-tight">Minimum 1 required. First slot is the spotlight image.</p>
+                <h3 className="text-[11px] font-black text-near-black uppercase tracking-[0.4em] mb-2">Visual Portfolio</h3>
+                <p className="text-[10px] font-black text-dark-grey/60 uppercase tracking-widest italic leading-tight">Minimum 1 required. First slot is the spotlight image.</p>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
                  {[0, 1, 2, 3, 4].map((index) => (
                     <div 
                       key={index} 
-                      className={`relative border-2 border-dashed border-wedding-gold/20 rounded-3xl flex flex-col items-center justify-center bg-wedding-cream hover:bg-white hover:border-wedding-gold transition-all overflow-hidden group shadow-sm ${index === 0 ? 'col-span-2 h-56' : 'h-32'}`}
+                      className={`relative border-2 border-dashed border-light-grey/20 rounded-3xl flex flex-col items-center justify-center bg-warm-white hover:bg-white hover:border-light-grey transition-all overflow-hidden group shadow-sm ${index === 0 ? 'col-span-2 h-56' : 'h-32'}`}
                     >
                        {imagePreviews[index] ? (
                           <>
                             <img src={imagePreviews[index]} alt={`Preview ${index}`} className="w-full h-full object-cover" />
-                            <div className="absolute inset-0 bg-wedding-brown/40 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="absolute inset-0 bg-near-black/40 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                <button 
                                   type="button" 
                                   onClick={() => handleRemoveImage(index)}
@@ -290,8 +286,8 @@ const PostAd = () => {
                           </>
                        ) : (
                           <>
-                             <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-wedding-gold text-2xl mb-2 shadow-sm">+</div>
-                             <span className="text-[9px] font-black text-wedding-brown/40 uppercase tracking-[0.2em]">{index === 0 ? 'Primary Slot' : `Extra Slot ${index + 1}`}</span>
+                             <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary-rose text-2xl mb-2 shadow-sm">+</div>
+                             <span className="text-[9px] font-black text-dark-grey/40 uppercase tracking-[0.2em]">{index === 0 ? 'Primary Slot' : `Extra Slot ${index + 1}`}</span>
                              <input 
                                 type="file" 
                                 accept="image/*"
@@ -303,23 +299,23 @@ const PostAd = () => {
                     </div>
                  ))}
               </div>
-              <div className="mt-8 p-6 bg-wedding-gold/5 rounded-3xl border border-wedding-gold/10">
-                 <p className="text-[9px] font-black text-wedding-gold uppercase tracking-[0.2em] mb-2 leading-none italic">Professional Recommendation</p>
-                 <p className="text-[10px] text-wedding-brown/70 leading-relaxed font-bold uppercase tracking-tight">Profiles with high-resolution imagery receive 4x more inquiries.</p>
+              <div className="mt-8 p-6 bg-deep-rose/5 rounded-3xl border border-light-grey/10">
+                 <p className="text-[9px] font-black text-primary-rose uppercase tracking-[0.2em] mb-2 leading-none italic">Professional Recommendation</p>
+                 <p className="text-[10px] text-dark-grey/70 leading-relaxed font-bold uppercase tracking-tight">Profiles with high-resolution imagery receive 4x more inquiries.</p>
               </div>
            </div>
 
-        <div className="mt-16 pt-10 border-t border-wedding-gold/10 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="flex items-center gap-4 text-wedding-brown/60">
+        <div className="mt-16 pt-10 border-t border-light-grey/10 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex items-center gap-4 text-dark-grey/60">
              <span className="text-2xl">💍</span>
              <p className="text-[10px] font-black uppercase tracking-widest max-w-[200px] leading-tight">By publishing, you agree to comply with our professional quality guidelines.</p>
           </div>
           <button 
             type="submit" 
-            className="w-full md:w-auto bg-wedding-gold text-wedding-brown hover:bg-wedding-brown hover:text-wedding-cream transition-all font-black py-6 px-16 rounded-2xl shadow-2xl shadow-wedding-gold/20 text-xs uppercase tracking-[0.3em] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed" 
+            className="w-full md:w-auto bg-primary-rose text-white hover:bg-deep-rose transition-all font-black py-5 px-16 rounded-2xl shadow-2xl shadow-primary-rose/30 text-xs uppercase tracking-[0.3em] active:scale-95 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed" 
             disabled={user.role === 'user' && user.freeAdsRemaining <= 0}
           >
-            Publish Listing 
+            Publish Listing
           </button>
         </div>
       </form>

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { getImageUrl, BASE_URL } from '../services/api';
 
 export default function PartnerProfile() {
   const { id } = useParams();
@@ -17,7 +18,7 @@ export default function PartnerProfile() {
     try {
       const token = localStorage.getItem('token');
       const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
-      const res = await axios.get(`http://localhost:5000/api/partner/profile/${id}`, config);
+      const res = await axios.get(`${BASE_URL}/api/partner/profile/${id}`, config);
       setProfileData(res.data);
     } catch (err) {
       console.error(err);
@@ -32,7 +33,7 @@ export default function PartnerProfile() {
   const handleSendInterest = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post(`http://localhost:5000/api/partner/interaction/send/${profileData.profile.user._id}`, {}, {
+      await axios.post(`${BASE_URL}/api/partner/interaction/send/${profileData.profile.user._id}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       });
       alert('Interest sent successfully!');
@@ -44,7 +45,7 @@ export default function PartnerProfile() {
   const handleMockPayment = async (type) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/payments/create-checkout-session', {
+      await axios.post(`${BASE_URL}/api/payments/create-checkout-session`, {
         type: type,
         profileId: id
       }, {
@@ -69,7 +70,7 @@ export default function PartnerProfile() {
         {/* Left Side: Photo */}
         <div className="md:w-1/3 bg-gray-200">
           {profile.photos && profile.photos[0] ? (
-            <img src={`http://localhost:5000${profile.photos[0]}`} className="w-full h-full object-cover min-h-[400px]" alt="Profile" />
+            <img src={getImageUrl(profile.photos[0])} className="w-full h-full object-cover min-h-[400px]" alt="Profile" />
           ) : (
             <div className="w-full h-full flex items-center justify-center min-h-[400px] bg-pink-100 text-pink-400">No Photo</div>
           )}

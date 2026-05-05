@@ -26,20 +26,20 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-[90vh] flex items-center justify-center px-4 py-20 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]">
-      <div className="max-w-md w-full bg-white p-12 rounded-[3.5rem] shadow-2xl border border-wedding-gold/10 relative overflow-hidden group">
+    <div className="min-h-[90vh] flex items-center justify-center px-4 py-20 bg-surface-gradient">
+      <div className="max-w-md w-full bg-white p-12 rounded-[3.5rem] shadow-2xl border border-light-grey/10 relative overflow-hidden group">
         <div className="absolute top-0 left-0 p-8 opacity-5 group-hover:-rotate-12 transition-transform duration-1000">
-           <span className="text-8xl font-black text-wedding-gold">💍</span>
+           <span className="text-8xl font-black text-primary-rose">💍</span>
         </div>
         
         <div className="text-center mb-10">
           <div className="flex items-center justify-center gap-3 mb-4">
-             <span className="w-10 h-[1px] bg-wedding-gold"></span>
-             <span className="text-[10px] font-black text-wedding-gold uppercase tracking-[0.5em]">Membership Registry</span>
-             <span className="w-10 h-[1px] bg-wedding-gold"></span>
+             <span className="w-10 h-[1px] bg-deep-rose"></span>
+             <span className="text-[10px] font-black text-primary-rose uppercase tracking-[0.5em]">Membership Registry</span>
+             <span className="w-10 h-[1px] bg-deep-rose"></span>
           </div>
-          <h2 className="text-4xl font-black text-wedding-brown uppercase tracking-tighter leading-none mb-2">Create <br /><span className="text-wedding-gold">Account</span></h2>
-          <p className="text-[11px] font-black text-wedding-brown/70 uppercase tracking-widest italic">Join Sri Lanka's Elite Wedding Circle</p>
+          <h2 className="text-4xl font-black text-near-black uppercase tracking-tighter leading-none mb-2">Create <br /><span className="text-gold-gradient">Account</span></h2>
+          <p className="text-[11px] font-black text-dark-grey/70 uppercase tracking-widest italic">Join Sri Lanka's Elite Wedding Circle</p>
         </div>
 
         {error && (
@@ -50,10 +50,10 @@ const Register = () => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
-            <label className="block text-[10px] font-black text-wedding-brown/60 uppercase tracking-widest ml-2">Full Legal Name</label>
+            <label className="block text-[10px] font-black text-dark-grey/60 uppercase tracking-widest ml-2">Full Legal Name</label>
             <input 
               type="text" 
-              className="w-full bg-wedding-cream border-none rounded-2xl p-5 text-xs font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all" 
+              className="w-full bg-warm-white border-none rounded-2xl p-5 text-xs font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all" 
               placeholder="e.g. Ama Perera"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -61,10 +61,10 @@ const Register = () => {
             />
           </div>
           <div className="space-y-4">
-            <label className="block text-[10px] font-black text-wedding-brown/60 uppercase tracking-widest ml-2">Secure Email Address</label>
+            <label className="block text-[10px] font-black text-dark-grey/60 uppercase tracking-widest ml-2">Secure Email Address</label>
             <input 
               type="email" 
-              className="w-full bg-wedding-cream border-none rounded-2xl p-5 text-xs font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all" 
+              className="w-full bg-warm-white border-none rounded-2xl p-5 text-xs font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all" 
               placeholder="e.g. ama@pela.lk"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -72,10 +72,10 @@ const Register = () => {
             />
           </div>
           <div className="space-y-4">
-            <label className="block text-[10px] font-black text-wedding-brown/60 uppercase tracking-widest ml-2">Private Password</label>
+            <label className="block text-[10px] font-black text-dark-grey/60 uppercase tracking-widest ml-2">Private Password</label>
             <input 
               type="password" 
-              className="w-full bg-wedding-cream border-none rounded-2xl p-5 text-xs font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all" 
+              className="w-full bg-warm-white border-none rounded-2xl p-5 text-xs font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all" 
               placeholder="Min. 8 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -83,14 +83,14 @@ const Register = () => {
             />
           </div>
           
-          <button type="submit" className="w-full bg-wedding-brown text-wedding-cream py-6 rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:bg-black transition-all shadow-xl shadow-wedding-brown/20 transform active:scale-95 flex items-center justify-center gap-3">
-            Register Membership <span>✨</span>
+          <button type="submit" className="w-full bg-primary-rose text-white py-5 rounded-2xl font-black uppercase text-xs tracking-[0.3em] hover:bg-deep-rose hover:scale-[1.02] transition-all shadow-xl shadow-primary-rose/30 active:scale-95 flex items-center justify-center gap-3">
+            Create Account <span>✨</span>
           </button>
         </form>
 
         <div className="mt-10 text-center">
-          <p className="text-wedding-brown/60 font-black uppercase tracking-widest text-[9px]">
-            Already recorded in our registry? <Link to="/login" className="text-wedding-gold hover:text-black transition-colors underline decoration-wedding-gold/30 underline-offset-4">Authenticate Now</Link>
+          <p className="text-dark-grey/60 font-black uppercase tracking-widest text-[9px]">
+            Already recorded in our registry? <Link to="/login" className="text-primary-rose hover:text-black transition-colors underline decoration-primary-rose/30 underline-offset-4">Authenticate Now</Link>
           </p>
         </div>
       </div>

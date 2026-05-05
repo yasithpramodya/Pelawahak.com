@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import api from '../api/axios';
+import api, { getImageUrl } from '../services/api';
 import { MapPin, Star, Filter } from 'lucide-react';
 
 const Listings = () => {
@@ -58,7 +58,7 @@ const Listings = () => {
               <Link to={`/listings/${listing._id}`} key={listing._id} className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100 group">
                 <div className="h-48 bg-gray-200 overflow-hidden">
                   {listing.images && listing.images.length > 0 ? (
-                    <img src={`http://localhost:5000${listing.images[0]}`} alt={listing.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <img src={getImageUrl(listing.images[0])} alt={listing.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   ) : (
                     <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">No Image</div>
                   )}

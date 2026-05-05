@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useAuthStore } from '../store/authStore';
+import { getImageUrl, BASE_URL } from '../services/api';
 
 export default function SeekingPartner() {
   const [profiles, setProfiles] = useState([]);
@@ -26,7 +27,7 @@ export default function SeekingPartner() {
       if (religion) queryStr += `religion=${religion}&`;
       if (location) queryStr += `location=${location}`;
 
-      const res = await axios.get(`http://localhost:5000/api/partner/search${queryStr}`);
+      const res = await axios.get(`${BASE_URL}/api/partner/search${queryStr}`);
       setProfiles(res.data);
     } catch (err) {
       console.error(err);
@@ -87,7 +88,7 @@ export default function SeekingPartner() {
               <div key={profile._id} className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden group">
                 <div className="h-64 bg-gray-200 relative overflow-hidden">
                   {profile.photos && profile.photos.length > 0 ? (
-                    <img src={`http://localhost:5000${profile.photos[0]}`} alt="Profile" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <img src={getImageUrl(profile.photos[0])} alt="Profile" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-pink-100 text-pink-300">
                       <span>No Photo</span>

@@ -32,7 +32,7 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <div className="min-h-screen bg-wedding-cream/30 text-wedding-brown font-sans selection:bg-wedding-gold/30">
+        <div className="min-h-screen bg-warm-white/30 text-near-black font-sans selection:bg-deep-rose/30">
           <Navbar />
           <main>
             <Routes>

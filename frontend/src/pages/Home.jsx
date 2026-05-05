@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import api from '../services/api';
 import AdCard from '../components/AdCard';
 import PartnerCard from '../components/PartnerCard';
@@ -13,6 +13,8 @@ const Home = () => {
   const [category, setCategory] = useState('');
   const [district, setDistrict] = useState('');
   const [search, setSearch] = useState('');
+
+  const scrollRef = useRef([]);
 
   const fetchAds = async () => {
     setLoading(true);
@@ -43,6 +45,25 @@ const Home = () => {
   useEffect(() => {
     fetchAds();
     fetchPartners();
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    const currentRefs = scrollRef.current;
+    currentRefs.forEach(ref => {
+      if (ref) observer.observe(ref);
+    });
+
+    return () => {
+      currentRefs.forEach(ref => {
+        if (ref) observer.unobserve(ref);
+      });
+    };
   }, []);
 
   const handleFilter = (e) => {
@@ -50,122 +71,145 @@ const Home = () => {
     fetchAds();
   };
 
-  return (
-    <div className="space-y-20 pb-20">
-      {/* HERO SECTION */}
-      <section className="relative min-h-[550px] md:h-[600px] rounded-[2rem] md:rounded-[3rem] overflow-hidden bg-wedding-brown flex items-center shadow-2xl shadow-wedding-brown/20 group mx-2 md:mx-0">
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-transparent z-10"></div>
-        <img 
-          src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=2069&auto=format&fit=crop" 
-          alt="Wedding Hero" 
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-110"
-        />
-        <div className="relative z-20 px-6 sm:px-12 md:px-24 max-w-4xl text-white">
-          <div className="flex items-center gap-3 mb-6 animate-fadeIn">
-            <span className="w-8 md:w-12 h-[2px] bg-wedding-gold"></span>
-            <span className="text-wedding-gold text-[10px] md:text-xs font-black uppercase tracking-[0.3em] md:tracking-[0.5em]">Premium Wedding Marketplace</span>
-          </div>
-          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] mb-8 drop-shadow-2xl">
-            Where Love <br className="hidden sm:block" /> Meets <span className="text-wedding-gold">Elegance.</span>
-          </h1>
-          <p className="text-sm md:text-xl text-wedding-cream max-w-2xl mb-12 leading-relaxed font-medium">
-            Sri Lanka's most trusted platform for finding the perfect wedding vendors and your ideal life partner. All in one exquisite location.
-          </p>
+  const addToScrollRefs = (el) => {
+    if (el && !scrollRef.current.includes(el)) {
+      scrollRef.current.push(el);
+    }
+  };
 
-          <div className="flex flex-col sm:flex-row gap-6">
-            <Link to="/post-ad" className="bg-wedding-gold text-wedding-brown hover:bg-white transition-all px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest text-center shadow-lg shadow-wedding-gold/20">
-              Post Your Ad
-            </Link>
-            <Link to="/partner" className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest text-center">
-              Find a Partner
-            </Link>
-          </div>
+  return (
+    <div className="space-y-32 pb-32">
+      {/* HERO SECTION */}
+      <main className="relative h-[90vh] md:h-screen flex items-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="/hero-blush.png" 
+            alt="Wedding Background" 
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-warm-white via-warm-white/80 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-warm-white via-transparent to-transparent"></div>
         </div>
         
-        {/* Floating Stat */}
-        <div className="absolute bottom-12 right-12 z-20 hidden lg:block animate-bounce-slow">
-           <div className="bg-wedding-cream/10 backdrop-blur-xl border border-white/10 p-6 rounded-3xl transform rotate-3">
-              <p className="text-4xl font-black text-wedding-gold">5000+</p>
-              <p className="text-[10px] font-black text-wedding-cream uppercase tracking-widest opacity-60">Verified Vendors</p>
+        {/* Hero Content */}
+        <div className="container mx-auto px-6 relative z-10 max-w-7xl">
+          <div className="w-full md:w-3/5">
+            <div className="inline-flex items-center gap-2 bg-primary-rose/10 px-4 py-2 rounded-full mb-8 animate-reveal" style={{ animationDelay: '0.2s' }}>
+               <span className="w-2 h-2 bg-primary-rose rounded-full animate-pulse"></span>
+               <span className="text-[10px] font-black text-primary-rose uppercase tracking-[0.3em]">The Premium Registry</span>
+            </div>
+            
+            <h1 className="text-6xl md:text-8xl font-serif font-black tracking-tighter leading-[0.95] mb-8 text-near-black animate-reveal" style={{ animationDelay: '0.4s' }}>
+              Crafting <span className="text-primary-rose italic">Eternal</span> <br />
+              <span className="text-gold-gradient">Moments</span>
+            </h1>
+            
+            <p className="text-lg md:text-xl text-dark-grey/70 font-medium mb-12 max-w-xl leading-relaxed animate-reveal" style={{ animationDelay: '0.6s' }}>
+              Sri Lanka's most exclusive marketplace for elite wedding vendors and matrimonial matchmaking.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 animate-reveal" style={{ animationDelay: '0.8s' }}>
+              <button 
+                onClick={() => document.getElementById('search-section')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-primary-rose text-white hover:bg-deep-rose transition-all duration-500 px-12 py-5 rounded-full font-black text-[11px] tracking-[0.2em] uppercase flex items-center justify-center gap-3 shadow-2xl shadow-primary-rose/30 hover:scale-105 active:scale-95"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                Explore Services
+              </button>
+              <Link to="/register" className="bg-white/40 backdrop-blur-md border border-primary-rose/30 text-primary-rose hover:bg-primary-rose hover:text-white transition-all duration-500 px-12 py-5 rounded-full font-black text-[11px] tracking-[0.2em] uppercase flex items-center justify-center gap-3 shadow-xl hover:scale-105 active:scale-95">
+                Join the Circle
+              </Link>
+            </div>
+          </div>
+        </div>
+
+      </main>
+
+      {/* FILTER SEARCH BAR & CATEGORIES */}
+      <div id="search-section" ref={addToScrollRefs} className="max-w-7xl mx-auto px-4 -mt-24 relative z-30 reveal">
+        <div className="glass-light p-4 rounded-[3rem] shadow-2xl">
+          <form onSubmit={handleFilter} className="flex flex-col md:flex-row items-center gap-4">
+            <div className="w-full md:w-1/3 px-8 py-4 bg-white/50 rounded-[2rem] border border-white/60">
+              <label className="block text-[8px] font-black text-dark-grey/40 uppercase tracking-[0.3em] mb-1">Select Category</label>
+              <select 
+                value={category} 
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full bg-transparent border-none text-near-black text-sm font-black focus:ring-0 cursor-pointer outline-none uppercase tracking-widest"
+              >
+                <option value="">All Services</option>
+                <option value="Photography">Photography</option>
+                <option value="Wedding Halls">Wedding Halls</option>
+                <option value="Bridal Dressing">Bridal Dressing</option>
+                <option value="Catering">Catering</option>
+                <option value="Music & Ent.">Entertainment</option>
+                <option value="Transport">Transport</option>
+                <option value="Wedding Planning">Planning</option>
+              </select>
+            </div>
+            
+            <div className="flex-1 w-full bg-white/50 px-8 py-4 rounded-[2rem] border border-white/60">
+               <label className="block text-[8px] font-black text-dark-grey/40 uppercase tracking-[0.3em] mb-1">Search Keywords</label>
+               <input 
+                type="text" 
+                placeholder="What are you looking for?" 
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full bg-transparent border-none text-near-black text-sm font-black placeholder-dark-grey/30 focus:ring-0 outline-none uppercase tracking-widest"
+              />
+            </div>
+            
+            <button type="submit" className="w-full md:w-48 bg-primary-rose text-white px-8 py-6 rounded-[2rem] font-black text-[11px] tracking-[0.2em] uppercase hover:bg-deep-rose transition-all shadow-xl shadow-primary-rose/20 active:scale-95">
+              Refine Results
+            </button>
+          </form>
+        </div>
+
+        {/* Categories Quick Filter */}
+        <div className="mt-12 flex justify-center">
+           <div className="inline-flex gap-8 px-10 py-6 glass-light rounded-full overflow-x-auto hide-scrollbar max-w-full">
+              {[
+                { name: 'Photography', icon: '📸' },
+                { name: 'Wedding Halls', icon: '🏛️' },
+                { name: 'Bridal Dressing', icon: '💄' },
+                { name: 'Catering', icon: '🍽️' },
+                { name: 'Transport', icon: '🚗' },
+                { name: 'More', icon: '✨' }
+              ].map((cat) => (
+                <button 
+                  key={cat.name} 
+                  type="button" 
+                  onClick={() => { setCategory(cat.name === 'More' ? '' : cat.name); fetchAds(); }} 
+                  className={`flex flex-col items-center gap-2 group transition-all duration-500 ${category === cat.name ? 'scale-110' : 'opacity-60 hover:opacity-100 hover:-translate-y-1'}`}
+                >
+                  <span className="text-xl group-hover:drop-shadow-lg transition-all">{cat.icon}</span>
+                  <span className={`text-[9px] font-black uppercase tracking-widest ${category === cat.name ? 'text-primary-rose' : 'text-dark-grey'}`}>{cat.name}</span>
+                </button>
+              ))}
            </div>
         </div>
-      </section>
-
-      {/* FILTER SEARCH BAR */}
-      <div className="max-w-7xl mx-auto px-4 -mt-16 md:-mt-16 relative z-30">
-        <form onSubmit={handleFilter} className="bg-white p-6 md:p-8 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl border border-wedding-gold/10 flex flex-col lg:flex-row gap-6 items-end">
-
-          <div className="flex-1 w-full">
-            <label className="block text-[10px] font-black text-wedding-brown/70 uppercase tracking-[0.2em] mb-4 ml-2">What are you looking for?</label>
-            <input 
-              type="text" 
-              placeholder="Photography, Catering, Banquets..." 
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-wedding-cream/50 border-none rounded-2xl p-4 text-xs font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all"
-            />
-          </div>
-          <div className="w-full lg:w-64">
-            <label className="block text-[10px] font-black text-wedding-brown/70 uppercase tracking-[0.2em] mb-4 ml-2">Category</label>
-            <select 
-              value={category} 
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full bg-wedding-cream/50 border-none rounded-2xl p-4 text-xs font-bold text-wedding-brown"
-            >
-              <option value="">All Categories</option>
-              <option value="Photography">Photography</option>
-              <option value="Catering">Catering</option>
-              <option value="Decoration">Decoration</option>
-              <option value="Bridal Dressing">Bridal Dressing</option>
-              <option value="Salons">Salons</option>
-              <option value="Music and DJ">Music and DJ</option>
-              <option value="Rent a Car">Rent a Car</option>
-              <option value="Banquet Halls">Banquet Halls</option>
-              <option value="Jewelry">Jewelry</option>
-              <option value="Wedding Clothing">Wedding Clothing</option>
-              <option value="Entertainment">Entertainment</option>
-              <option value="Ashtaka">Ashtaka</option>
-              <option value="Wedding Cake">Wedding Cake</option>
-              <option value="Wedding Planning">Wedding Planning</option>
-              <option value="Honeymoon">Honeymoon</option>
-              <option value="Others">Others</option>
-            </select>
-          </div>
-          <div className="w-full lg:w-64">
-            <label className="block text-[10px] font-black text-wedding-brown/70 uppercase tracking-[0.2em] mb-4 ml-2">District</label>
-            <select 
-              value={district} 
-              onChange={(e) => setDistrict(e.target.value)}
-              className="w-full bg-wedding-cream/50 border-none rounded-2xl p-4 text-xs font-bold text-wedding-brown"
-            >
-              <option value="">All Districts</option>
-              {Object.keys(locations).map(d => (
-                <option key={d} value={d}>{d}</option>
-              ))}
-            </select>
-          </div>
-          <button type="submit" className="w-full lg:w-48 bg-wedding-brown hover:bg-black text-wedding-cream p-5 rounded-2xl font-black uppercase text-xs tracking-widest transition-all shadow-xl shadow-wedding-brown/20">
-            Search
-          </button>
-        </form>
       </div>
 
       {/* FEATURED PARTNERS SECTION */}
-      <section className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-end mb-10">
-          <div>
-            <h2 className="text-4xl font-black text-wedding-brown uppercase tracking-tighter leading-none mb-3">Seeking <span className="text-wedding-gold">Partners</span></h2>
-            <p className="text-wedding-brown/70 font-black uppercase tracking-widest text-[10px]">Find your soulmate in our premium matrimonial hub</p>
+      <section ref={addToScrollRefs} className="max-w-7xl mx-auto px-4 reveal">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-16 gap-6">
+          <div className="text-center md:text-left">
+            <h2 className="text-4xl md:text-6xl font-serif font-black text-near-black uppercase tracking-tight leading-none mb-4">
+              Premium <span className="text-gold-gradient italic">Matrimony</span>
+            </h2>
+            <p className="text-dark-grey/50 font-black uppercase tracking-[0.4em] text-[10px]">Find your soulmate in Sri Lanka's elite circle</p>
           </div>
-          <Link to="/partner" className="text-wedding-gold font-black uppercase text-xs tracking-widest hover:text-wedding-brown transition-colors">View All Profiles →</Link>
+          <Link to="/partner" className="group flex items-center gap-4 bg-near-black/5 px-8 py-3 rounded-full hover:bg-near-black hover:text-white transition-all duration-500">
+             <span className="text-[10px] font-black uppercase tracking-[0.2em]">View Registry</span>
+             <span className="group-hover:translate-x-1 transition-transform">→</span>
+          </Link>
         </div>
 
         {partnersLoading ? (
-          <div className="flex justify-center py-20">
-             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-wedding-gold"></div>
+          <div className="flex justify-center py-24">
+             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary-rose"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             {partners.map(partner => (
               <PartnerCard key={partner._id} partner={partner} />
             ))}
@@ -174,24 +218,26 @@ const Home = () => {
       </section>
 
       {/* RECENT ADS SECTION */}
-      <section className="max-w-7xl mx-auto px-4">
-        <div className="flex justify-between items-end mb-10">
-          <div>
-            <h2 className="text-4xl font-black text-wedding-brown uppercase tracking-tighter leading-none mb-3">Latest <span className="text-wedding-gold">Marketplace</span> Ads</h2>
-            <p className="text-wedding-brown/70 font-black uppercase tracking-widest text-[10px]">Discover premier wedding services from across Sri Lanka</p>
+      <section ref={addToScrollRefs} className="max-w-7xl mx-auto px-4 reveal">
+        <div className="flex flex-col md:flex-row justify-between items-center md:items-end mb-16 gap-6">
+          <div className="text-center md:text-left">
+            <h2 className="text-4xl md:text-6xl font-serif font-black text-near-black uppercase tracking-tight leading-none mb-4">
+              Curated <span className="text-primary-rose italic">Marketplace</span>
+            </h2>
+            <p className="text-dark-grey/50 font-black uppercase tracking-[0.4em] text-[10px]">Discover premier wedding services from across the island</p>
           </div>
         </div>
         
         {loading ? (
-          <div className="flex justify-center py-20">
-             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-wedding-gold"></div>
+          <div className="flex justify-center py-24">
+             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-primary-rose"></div>
           </div>
         ) : ads.length === 0 ? (
-          <div className="bg-white p-20 rounded-[3rem] text-center border border-wedding-gold/10">
-             <p className="text-wedding-brown/70 font-black tracking-widest uppercase text-xs">No services found for the current filter.</p>
+          <div className="glass-card p-32 rounded-[4rem] text-center">
+             <p className="text-dark-grey/40 font-black tracking-[0.3em] uppercase text-xs">No services matched your selection</p>
           </div>
         ) : (
-          <div className="flex flex-col gap-8">
+          <div className="grid grid-cols-1 gap-12">
             {ads.map(ad => (
               <AdCard key={ad._id} ad={ad} />
             ))}
@@ -203,3 +249,4 @@ const Home = () => {
 };
 
 export default Home;
+

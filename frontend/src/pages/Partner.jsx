@@ -46,12 +46,12 @@ const Partner = () => {
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-16 animate-fadeIn">
       <div className="flex flex-col md:flex-row justify-between md:items-end mb-10 md:mb-16 gap-6 md:gap-8">
         <div>
-          <h2 className="text-4xl md:text-6xl font-black text-wedding-brown uppercase tracking-tighter leading-none mb-4">Partner <span className="text-wedding-gold">Archive</span></h2>
-          <p className="text-wedding-brown/70 font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-[10px] italic">Refine your aspirations to discover the ideal union</p>
+          <h2 className="text-4xl md:text-6xl font-black text-near-black uppercase tracking-tighter leading-none mb-4">Partner <span className="text-gold-gradient">Archive</span></h2>
+          <p className="text-dark-grey/70 font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-[10px] italic">Refine your aspirations to discover the ideal union</p>
         </div>
-        <div className="flex bg-wedding-cream p-1.5 md:p-2 rounded-[1.5rem] md:rounded-[2rem] border border-wedding-gold/10 shadow-sm w-fit">
-           <button className="bg-wedding-gold text-wedding-brown px-6 md:px-10 py-2.5 md:py-3 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-xl shadow-wedding-gold/10">PREMIUM</button>
-           <button className="text-wedding-brown/60 px-6 md:px-10 py-2.5 md:py-3 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest hover:text-wedding-brown transition-colors">ARCHIVE</button>
+        <div className="flex bg-warm-white p-1.5 md:p-2 rounded-[1.5rem] md:rounded-[2rem] border border-light-grey/10 shadow-sm w-fit">
+           <button className="bg-primary-rose text-white px-6 md:px-10 py-2.5 md:py-3 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest shadow-xl shadow-primary-rose/30 transition-all hover:bg-deep-rose">PREMIUM</button>
+           <button className="text-dark-grey/60 px-6 md:px-10 py-2.5 md:py-3 rounded-xl md:rounded-2xl text-[9px] md:text-[10px] font-black uppercase tracking-widest hover:text-near-black transition-colors">ARCHIVE</button>
         </div>
       </div>
 
@@ -60,33 +60,33 @@ const Partner = () => {
         
         {/* FILTERS SIDEBAR */}
         <div className="lg:col-span-1">
-           <form onSubmit={handleSearch} className="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[3.5rem] shadow-2xl border border-wedding-gold/10 lg:sticky lg:top-10 space-y-6 md:space-y-10">
+           <form onSubmit={handleSearch} className="bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[3.5rem] shadow-2xl border border-light-grey/10 lg:sticky lg:top-10 space-y-6 md:space-y-10">
 
               <div className="flex items-center gap-4 mb-2">
-                 <span className="w-10 h-[1px] bg-wedding-gold"></span>
-                 <h3 className="text-[10px] font-black text-wedding-brown/60 uppercase tracking-[0.4em]">Refine Search</h3>
+                 <span className="w-10 h-[1px] bg-deep-rose"></span>
+                 <h3 className="text-[10px] font-black text-dark-grey/60 uppercase tracking-[0.4em]">Refine Search</h3>
               </div>
               
               <div className="space-y-8">
                   <div className="space-y-3">
-                    <label className="block text-[9px] font-black text-wedding-brown/60 uppercase tracking-[0.2em] ml-2">Identity Keyword</label>
+                    <label className="block text-[9px] font-black text-dark-grey/60 uppercase tracking-[0.2em] ml-2">Identity Keyword</label>
                     <input 
                       type="text" 
                       name="search"
                       value={filters.search}
                       onChange={handleInputChange}
                       placeholder="e.g. Engineer, Doctor"
-                      className="w-full bg-wedding-cream/50 border-none rounded-2xl p-5 text-[11px] font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all placeholder:text-wedding-brown/40 uppercase tracking-tight"
+                      className="w-full bg-warm-white/50 border-none rounded-2xl p-5 text-[11px] font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all placeholder:text-dark-grey/40 uppercase tracking-tight"
                     />
                   </div>
 
                   <div className="space-y-3">
-                    <label className="block text-[9px] font-black text-wedding-brown/60 uppercase tracking-[0.2em] ml-2">Seeking Profile</label>
+                    <label className="block text-[9px] font-black text-dark-grey/60 uppercase tracking-[0.2em] ml-2">Seeking Profile</label>
                     <select 
                       name="gender" 
                       value={filters.gender}
                       onChange={handleInputChange}
-                      className="w-full bg-wedding-cream/50 border-none rounded-2xl p-5 text-[11px] font-black text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all uppercase tracking-tight"
+                      className="w-full bg-warm-white/50 border-none rounded-2xl p-5 text-[11px] font-black text-near-black focus:ring-2 focus:ring-primary-rose transition-all uppercase tracking-tight"
                     >
                       <option value="">ALL GENDERS</option>
                       <option value="Female">BRIDES (FEMALE)</option>
@@ -95,12 +95,12 @@ const Partner = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <label className="block text-[9px] font-black text-wedding-brown/60 uppercase tracking-[0.2em] ml-2">Spiritual Focus</label>
+                    <label className="block text-[9px] font-black text-dark-grey/60 uppercase tracking-[0.2em] ml-2">Spiritual Focus</label>
                     <select 
                       name="religion" 
                       value={filters.religion}
                       onChange={handleInputChange}
-                      className="w-full bg-wedding-cream/50 border-none rounded-2xl p-5 text-[11px] font-black text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all uppercase tracking-tight"
+                      className="w-full bg-warm-white/50 border-none rounded-2xl p-5 text-[11px] font-black text-near-black focus:ring-2 focus:ring-primary-rose transition-all uppercase tracking-tight"
                     >
                       <option value="">ALL RELIGIONS</option>
                       {religions.map(r => <option key={r} value={r.toUpperCase()}>{r.toUpperCase()}</option>)}
@@ -108,12 +108,12 @@ const Partner = () => {
                   </div>
 
                   <div className="space-y-3">
-                    <label className="block text-[9px] font-black text-wedding-brown/60 uppercase tracking-[0.2em] ml-2">Regional Filter</label>
+                    <label className="block text-[9px] font-black text-dark-grey/60 uppercase tracking-[0.2em] ml-2">Regional Filter</label>
                     <select 
                       name="district" 
                       value={filters.district}
                       onChange={handleInputChange}
-                      className="w-full bg-wedding-cream/50 border-none rounded-2xl p-5 text-[11px] font-black text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all uppercase tracking-tight"
+                      className="w-full bg-warm-white/50 border-none rounded-2xl p-5 text-[11px] font-black text-near-black focus:ring-2 focus:ring-primary-rose transition-all uppercase tracking-tight"
                     >
                       <option value="">ALL ISLAND</option>
                       {Object.keys(locations).map(d => <option key={d} value={d}>{d.toUpperCase()}</option>)}
@@ -122,33 +122,33 @@ const Partner = () => {
 
                   <div className="flex gap-4">
                      <div className="flex-1 space-y-3">
-                        <label className="block text-[9px] font-black text-wedding-brown/60 uppercase tracking-[0.2em] ml-2">Min Age</label>
+                        <label className="block text-[9px] font-black text-dark-grey/60 uppercase tracking-[0.2em] ml-2">Min Age</label>
                         <input 
                           type="number" 
                           name="ageMin"
                           value={filters.ageMin}
                           onChange={handleInputChange}
-                          className="w-full bg-wedding-cream/50 border-none rounded-2xl p-5 text-[11px] font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all"
+                          className="w-full bg-warm-white/50 border-none rounded-2xl p-5 text-[11px] font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all"
                         />
                      </div>
                      <div className="flex-1 space-y-3">
-                        <label className="block text-[9px] font-black text-wedding-brown/60 uppercase tracking-[0.2em] ml-2">Max Age</label>
+                        <label className="block text-[9px] font-black text-dark-grey/60 uppercase tracking-[0.2em] ml-2">Max Age</label>
                         <input 
                           type="number" 
                           name="ageMax"
                           value={filters.ageMax}
                           onChange={handleInputChange}
-                          className="w-full bg-wedding-cream/50 border-none rounded-2xl p-5 text-[11px] font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all"
+                          className="w-full bg-warm-white/50 border-none rounded-2xl p-5 text-[11px] font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all"
                         />
                      </div>
                   </div>
 
-                  <button 
-                    type="submit"
-                    className="w-full bg-wedding-brown text-wedding-cream font-black py-6 rounded-2xl shadow-2xl shadow-wedding-brown/20 uppercase tracking-[0.3em] text-[10px] hover:bg-black transition-all transform active:scale-95 flex items-center justify-center gap-3"
-                  >
-                    IDENTIFY MATCHES <span>✦</span>
-                  </button>
+                   <button 
+                     type="submit"
+                     className="w-full bg-primary-rose text-white font-black py-5 rounded-2xl shadow-2xl shadow-primary-rose/30 uppercase tracking-[0.3em] text-[10px] transition-all transform active:scale-95 hover:bg-deep-rose hover:scale-[1.02] flex items-center justify-center gap-3"
+                   >
+                     Find Matches <span>→</span>
+                   </button>
               </div>
            </form>
         </div>
@@ -156,19 +156,19 @@ const Partner = () => {
         {/* RESULTS GRID */}
         <div className="lg:col-span-3">
            {loading ? (
-             <div className="p-16 md:p-32 text-center bg-white rounded-[2rem] md:rounded-[4rem] shadow-xl border border-wedding-gold/10">
-                <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-t-2 border-wedding-gold border-r-2 border-wedding-gold mx-auto mb-8 shadow-inner shadow-wedding-gold/20"></div>
-                <p className="text-wedding-gold font-black uppercase tracking-[0.4em] md:tracking-[0.5em] text-[9px] md:text-[10px] animate-pulse">Consulting Registry...</p>
+             <div className="p-16 md:p-32 text-center bg-white rounded-[2rem] md:rounded-[4rem] shadow-xl border border-light-grey/10">
+                <div className="animate-spin rounded-full h-12 w-12 md:h-16 md:w-16 border-t-2 border-light-grey border-r-2 border-light-grey mx-auto mb-8 shadow-inner shadow-primary-rose/20"></div>
+                <p className="text-primary-rose font-black uppercase tracking-[0.4em] md:tracking-[0.5em] text-[9px] md:text-[10px] animate-pulse">Consulting Registry...</p>
              </div>
 
            ) : partners.length === 0 ? (
-             <div className="bg-white p-32 text-center rounded-[4rem] border border-wedding-gold/10 shadow-2xl">
-                <div className="w-24 h-24 bg-wedding-cream rounded-full flex items-center justify-center mx-auto mb-10 text-4xl shadow-inner border border-wedding-gold/10">🔍</div>
-                <h4 className="text-2xl font-black text-wedding-brown uppercase tracking-tight mb-4">No Affinities Found</h4>
-                <p className="text-wedding-brown/60 font-black uppercase tracking-widest text-[10px] mb-8 leading-loose">We were unable to locate profiles matching your current specifications. Experience the archive by refining your filters.</p>
+             <div className="bg-white p-32 text-center rounded-[4rem] border border-light-grey/10 shadow-2xl">
+                <div className="w-24 h-24 bg-warm-white rounded-full flex items-center justify-center mx-auto mb-10 text-4xl shadow-inner border border-light-grey/10">🔍</div>
+                <h4 className="text-2xl font-black text-near-black uppercase tracking-tight mb-4">No Affinities Found</h4>
+                <p className="text-dark-grey/60 font-black uppercase tracking-widest text-[10px] mb-8 leading-loose">We were unable to locate profiles matching your current specifications. Experience the archive by refining your filters.</p>
                 <button 
                   onClick={() => { setFilters({ gender:'', religion:'', district:'', ageMin:'', ageMax:'', search:'' }); setTimeout(fetchPartners, 100); }} 
-                  className="text-wedding-gold font-black uppercase text-[10px] tracking-[0.4em] border-b-2 border-wedding-gold/30 hover:border-wedding-gold transition-all pb-1"
+                  className="text-primary-rose font-black uppercase text-[10px] tracking-[0.4em] border-b-2 border-light-grey/30 hover:border-light-grey transition-all pb-1"
                 >
                   Reset Parameters
                 </button>

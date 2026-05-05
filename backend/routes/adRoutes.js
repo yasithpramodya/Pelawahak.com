@@ -4,33 +4,7 @@ const mongoose = require('mongoose');
 const Ad = require('../models/Ad');
 const User = require('../models/User');
 const { protect } = require('../middleware/authMiddleware');
-const multer = require('multer');
-const path = require('path');
-
-// Multer config for local file uploads
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, 'uploads/');
-  },
-  filename(req, file, cb) {
-    cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`);
-  }
-});
-
-const upload = multer({
-  storage,
-  fileFilter: function (req, file, cb) {
-    const filetypes = /jpg|jpeg|png|webp/;
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = filetypes.test(file.mimetype);
-
-    if (mimetype && extname) {
-      return cb(null, true);
-    } else {
-      cb('Images only!');
-    }
-  }
-});
+const upload = require('../middleware/uploadMiddleware');
 
 // @desc    Create a new ad
 // @route   POST /api/ads
@@ -47,7 +21,7 @@ router.post('/', protect, upload.array('images', 5), async (req, res) => {
     let imagePaths = [];
     
     if (req.files) {
-      imagePaths = req.files.map(file => `/uploads/${file.filename}`);
+      imagePaths = req.files.map(file => file.location || `/uploads/${file.filename}`);
     }
 
     const ad = await Ad.create({

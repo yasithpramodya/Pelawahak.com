@@ -68,9 +68,7 @@ const PostPartner = () => {
     });
 
     try {
-      await api.post('/partners', data, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      await api.post('/partners', data);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Error creating profile');
@@ -82,8 +80,8 @@ const PostPartner = () => {
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 md:py-16 animate-fadeIn">
       <div className="mb-10 md:mb-14">
-        <h2 className="text-3xl md:text-5xl font-black text-wedding-brown uppercase tracking-tighter leading-none mb-4">Partner <span className="text-wedding-gold">Registry</span></h2>
-        <p className="text-wedding-brown/70 font-black uppercase tracking-widest text-[9px] md:text-[10px] italic">Establish a sophisticated profile for matrimonial matching</p>
+        <h2 className="text-3xl md:text-5xl font-black text-near-black uppercase tracking-tighter leading-none mb-4">Partner <span className="text-primary-rose">Registry</span></h2>
+        <p className="text-dark-grey/70 font-black uppercase tracking-widest text-[9px] md:text-[10px] italic">Establish a sophisticated profile for matrimonial matching</p>
       </div>
       
       {error && (
@@ -92,19 +90,19 @@ const PostPartner = () => {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="bg-white p-6 md:p-10 lg:p-14 rounded-[2rem] md:rounded-[4rem] shadow-2xl border border-wedding-gold/10 grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 relative overflow-hidden">
+      <form onSubmit={handleSubmit} className="bg-white p-6 md:p-10 lg:p-14 rounded-[2rem] md:rounded-[4rem] shadow-2xl border border-light-grey/10 grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16 relative overflow-hidden">
         <div className="absolute top-0 right-0 p-10 opacity-5">
-           <span className="text-7xl md:text-9xl font-black text-wedding-gold rotate-12 inline-block">💍</span>
+           <span className="text-7xl md:text-9xl font-black text-primary-rose rotate-12 inline-block">💍</span>
         </div>
 
         <div className="space-y-8 md:space-y-10 relative z-10">
           <div className="space-y-4">
-            <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.3em] ml-2">Profile Narrative (Title)</label>
+            <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.3em] ml-2">Profile Narrative (Title)</label>
             <input 
               type="text" 
               name="title" 
               placeholder="e.g. Seeking an educated and kind-hearted soul"
-              className="w-full bg-wedding-cream/50 border-none rounded-2xl p-6 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all"
+              className="w-full bg-warm-white/50 border-none rounded-2xl p-6 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all"
               onChange={handleInputChange}
               required 
             />
@@ -113,19 +111,19 @@ const PostPartner = () => {
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-4">
-              <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.3em] ml-2">Gender Identity</label>
-              <select name="gender" className="w-full bg-wedding-cream/50 border-none rounded-2xl p-6 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all" onChange={handleInputChange}>
+              <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.3em] ml-2">Gender Identity</label>
+              <select name="gender" className="w-full bg-warm-white/50 border-none rounded-2xl p-6 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all" onChange={handleInputChange}>
                 <option value="Female">Female</option>
                 <option value="Male">Male</option>
               </select>
             </div>
             <div className="space-y-4">
-              <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.3em] ml-2">Current Age</label>
+              <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.3em] ml-2">Current Age</label>
               <input 
                 type="number" 
                 name="age" 
                 placeholder="Years"
-                className="w-full bg-wedding-cream/50 border-none rounded-2xl p-6 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all"
+                className="w-full bg-warm-white/50 border-none rounded-2xl p-6 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all"
                 onChange={handleInputChange}
                 required 
               />
@@ -134,18 +132,18 @@ const PostPartner = () => {
 
           <div className="grid grid-cols-2 gap-6">
              <div className="space-y-4">
-                <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.3em] ml-2">Religious Focus</label>
-                <select name="religion" className="w-full bg-wedding-cream/50 border-none rounded-2xl p-6 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all" onChange={handleInputChange}>
+                <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.3em] ml-2">Religious Focus</label>
+                <select name="religion" className="w-full bg-warm-white/50 border-none rounded-2xl p-6 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all" onChange={handleInputChange}>
                   {religions.map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
               </div>
               <div className="space-y-4">
-                <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.3em] ml-2">Height Meta</label>
+                <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.3em] ml-2">Height Meta</label>
                 <input 
                   type="text" 
                   name="height" 
                   placeholder="e.g. 5 feet 8 inches"
-                  className="w-full bg-wedding-cream/50 border-none rounded-2xl p-6 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all"
+                  className="w-full bg-warm-white/50 border-none rounded-2xl p-6 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all"
                   onChange={handleInputChange}
                 />
               </div>
@@ -153,14 +151,14 @@ const PostPartner = () => {
 
           <div className="grid grid-cols-2 gap-6">
             <div className="space-y-4">
-              <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.3em] ml-2">Primary District</label>
-              <select name="district" className="w-full bg-wedding-cream/50 border-none rounded-2xl p-6 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all" onChange={handleInputChange}>
+              <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.3em] ml-2">Primary District</label>
+              <select name="district" className="w-full bg-warm-white/50 border-none rounded-2xl p-6 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all" onChange={handleInputChange}>
                 {Object.keys(locations).map(d => <option key={d} value={d}>{d}</option>)}
               </select>
             </div>
             <div className="space-y-4">
-              <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.3em] ml-2">Home City</label>
-              <select name="city" className="w-full bg-wedding-cream/50 border-none rounded-2xl p-6 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all" onChange={handleInputChange}>
+              <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.3em] ml-2">Home City</label>
+              <select name="city" className="w-full bg-warm-white/50 border-none rounded-2xl p-6 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all" onChange={handleInputChange}>
                 {locations[formData.district].map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
@@ -169,62 +167,62 @@ const PostPartner = () => {
 
         <div className="space-y-10 relative z-10">
           <div className="space-y-4">
-            <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.3em] ml-2">Professional Status</label>
+            <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.3em] ml-2">Professional Status</label>
             <input 
               type="text" 
               name="profession" 
               placeholder="e.g. Software Engineer, Doctor, etc."
-              className="w-full bg-wedding-cream/50 border-none rounded-2xl p-6 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all"
+              className="w-full bg-warm-white/50 border-none rounded-2xl p-6 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all"
               onChange={handleInputChange}
               required 
             />
           </div>
           <div className="space-y-4">
-            <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.3em] ml-2">Educational Pedigree</label>
+            <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.3em] ml-2">Educational Pedigree</label>
             <input 
               type="text" 
               name="education" 
               placeholder="e.g. MBA - University of Colombo"
-              className="w-full bg-wedding-cream/50 border-none rounded-2xl p-6 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all"
+              className="w-full bg-warm-white/50 border-none rounded-2xl p-6 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all"
               onChange={handleInputChange}
             />
           </div>
           <div className="space-y-4">
-            <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.3em] ml-2">Registry Contact</label>
+            <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.3em] ml-2">Registry Contact</label>
             <input 
               type="text" 
               name="phone" 
               placeholder="07X XXX XXXX"
-              className="w-full bg-wedding-cream/50 border-none rounded-2xl p-6 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all"
+              className="w-full bg-warm-white/50 border-none rounded-2xl p-6 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all"
               onChange={handleInputChange}
               required 
             />
           </div>
           <div className="space-y-4">
-            <label className="block text-[10px] font-black text-wedding-brown/40 uppercase tracking-[0.3em] ml-2">Personal Manifesto (About)</label>
+            <label className="block text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.3em] ml-2">Personal Manifesto (About)</label>
             <textarea 
               name="description" 
               placeholder="Share details about family background, values and expectations..."
               rows="4" 
-              className="w-full bg-wedding-cream/50 border-none rounded-[2rem] p-6 text-sm font-bold text-wedding-brown focus:ring-2 focus:ring-wedding-gold transition-all"
+              className="w-full bg-warm-white/50 border-none rounded-[2rem] p-6 text-sm font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all"
               onChange={handleInputChange}
               required 
             ></textarea>
           </div>
         </div>
 
-        <div className="lg:col-span-2 border-t border-wedding-gold/10 pt-16">
+        <div className="lg:col-span-2 border-t border-light-grey/10 pt-16">
           <div className="mb-10 text-center">
-            <h3 className="text-[11px] font-black text-wedding-brown uppercase tracking-[0.5em] mb-2">Visual Verification</h3>
-            <p className="text-[9px] font-black text-wedding-brown/60 uppercase tracking-widest italic leading-relaxed">Elegant imagery increases matching probability by up to 300%.</p>
+            <h3 className="text-[11px] font-black text-near-black uppercase tracking-[0.5em] mb-2">Visual Verification</h3>
+            <p className="text-[9px] font-black text-dark-grey/60 uppercase tracking-widest italic leading-relaxed">Elegant imagery increases matching probability by up to 300%.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {[0, 1, 2].map(i => (
-              <div key={i} className="relative aspect-[4/5] bg-wedding-cream rounded-[2.5rem] border-2 border-dashed border-wedding-gold/20 overflow-hidden group hover:border-wedding-gold hover:bg-white transition-all shadow-sm">
+              <div key={i} className="relative aspect-[4/5] bg-warm-white rounded-[2.5rem] border-2 border-dashed border-light-grey/20 overflow-hidden group hover:border-light-grey hover:bg-white transition-all shadow-sm">
                 {previews[i] ? (
                   <>
                     <img src={previews[i]} alt="Preview" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-wedding-brown/40 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute inset-0 bg-near-black/40 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                        <button 
                           type="button" 
                           onClick={() => {
@@ -238,7 +236,7 @@ const PostPartner = () => {
                     </div>
                   </>
                 ) : (
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-wedding-gold/40">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-primary-rose/40">
                     <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center text-3xl mb-3 shadow-sm">+</div>
                     <span className="text-[9px] font-black uppercase tracking-[0.2em]">{i === 0 ? 'Spotlight Slot' : `Auxiliary Slot ${i + 1}`}</span>
                   </div>
@@ -258,18 +256,18 @@ const PostPartner = () => {
           <button 
             type="submit" 
             disabled={loading}
-            className={`w-full max-w-xl bg-wedding-gold text-wedding-brown font-black py-7 rounded-[2rem] shadow-2xl shadow-wedding-gold/30 uppercase tracking-[0.3em] text-xs transition-all flex items-center justify-center gap-4 ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-wedding-brown hover:text-wedding-cream active:scale-95'}`}
+            className={`w-full max-w-xl bg-primary-rose text-white font-black py-6 rounded-[2rem] shadow-2xl shadow-primary-rose/30 uppercase tracking-[0.3em] text-xs transition-all flex items-center justify-center gap-4 ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-deep-rose hover:scale-[1.02] active:scale-95'}`}
           >
             {loading ? (
               <>
-                 <div className="animate-spin h-4 w-4 border-2 border-wedding-brown border-t-transparent rounded-full"></div>
+                 <div className="animate-spin h-4 w-4 border-2 border-light-grey border-t-transparent rounded-full"></div>
                  Recording Registry...
               </>
             ) : (
               <>Establish Membership <span>✦</span></>
             )}
           </button>
-          <p className="mt-8 text-[9px] font-black text-wedding-brown/60 uppercase tracking-widest text-center max-w-md leading-loose">By establishing this profile, you affirm the veracity of all metadata provided according to our professional standards.</p>
+          <p className="mt-8 text-[9px] font-black text-dark-grey/60 uppercase tracking-widest text-center max-w-md leading-loose">By establishing this profile, you affirm the veracity of all metadata provided according to our professional standards.</p>
         </div>
       </form>
     </div>

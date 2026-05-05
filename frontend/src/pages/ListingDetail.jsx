@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import api from '../api/axios';
+import api, { getImageUrl } from '../services/api';
 import { MapPin, Star, Calendar, MessageSquare, CheckCircle } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 
@@ -55,7 +55,7 @@ const ListingDetail = () => {
           {/* Images Section */}
           <div className="md:w-1/2 h-[400px] md:h-auto bg-gray-100">
              {listing.images && listing.images.length > 0 ? (
-                <img src={`http://localhost:5000${listing.images[0]}`} alt={listing.title} className="w-full h-full object-cover" />
+                <img src={getImageUrl(listing.images[0])} alt={listing.title} className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-gray-400">No Image Available</div>
              )}
