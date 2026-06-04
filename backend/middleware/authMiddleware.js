@@ -18,12 +18,28 @@ const protect = async (req, res, next) => {
       next();
     } catch (error) {
       console.error(error);
-      res.status(401).json({ message: 'Not authorized, token failed' });
+
+      // Token expire වුණාම
+      if (error.name === 'TokenExpiredError') {
+        return res.status(401).json({ 
+          message: 'Session expired, please login again',
+          expired: true  // Frontend එකට detect කරන්න
+        });
+      }
+
+      // Token invalid නම්
+      if (error.name === 'JsonWebTokenError') {
+        return res.status(401).json({ 
+          message: 'Invalid token, please login again' 
+        });
+      }
+
+      return res.status(401).json({ message: 'Not authorized, token failed' });
     }
   }
 
   if (!token) {
-    res.status(401).json({ message: 'Not authorized, no token' });
+    return res.status(401).json({ message: 'Not authorized, no token' });
   }
 };
 

@@ -17,11 +17,26 @@ router.post('/', protect, upload.array('images', 5), async (req, res) => {
       return res.status(403).json({ message: 'Free ad limit reached. Please upgrade.' });
     }
 
+    if (user.role === 'user') {
+      const updatedUser = await User.findOneAndUpdate(
+        { _id: req.user._id, freeAdsRemaining: { $gt: 0 } },
+        { $inc: { freeAdsRemaining: -1 } },
+        { new: true }
+      );
+      if (!updatedUser) {
+        return res.status(403).json({ message: 'Free ad limit reached. Please upgrade.' });
+      }
+    }
+
     const { title, description, category, district, city, price, phone } = req.body;
     let imagePaths = [];
     
-    if (req.files) {
-      imagePaths = req.files.map(file => file.location || `/uploads/${file.filename}`);
+    if (req.files && req.files.length > 0) {
+      imagePaths = req.files.map(file => file.path || file.location || `/uploads/${file.filename}`);
+    } else if (req.body.imageUrls) {
+      imagePaths = Array.isArray(req.body.imageUrls) ? req.body.imageUrls : [req.body.imageUrls];
+    } else if (req.body.images) {
+      imagePaths = Array.isArray(req.body.images) ? req.body.images : [req.body.images];
     }
 
     const ad = await Ad.create({
@@ -36,11 +51,6 @@ router.post('/', protect, upload.array('images', 5), async (req, res) => {
       images: imagePaths,
       status: 'pending' // Default status
     });
-
-    if (user.role === 'user') {
-      user.freeAdsRemaining -= 1;
-      await user.save();
-    }
 
     res.status(201).json(ad);
   } catch (error) {

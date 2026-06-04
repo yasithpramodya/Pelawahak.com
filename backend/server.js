@@ -4,16 +4,33 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
 const fs = require('fs');
+const helmet = require('helmet');
+const compression = require('compression');
 
 const authRoutes = require('./routes/authRoutes');
 const adRoutes = require('./routes/adRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 dotenv.config();
 
+// Fail-fast environment check
+const requiredEnvVars = ['MONGO_URI', 'JWT_SECRET', 'CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET'];
+const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+if (missingEnvVars.length > 0) {
+  console.error(`❌ FATAL: Missing required environment variables: ${missingEnvVars.join(', ')}`);
+  process.exit(1);
+}
+
 const app = express();
+
+// Apply security headers and compression
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" }
+}));
+app.use(compression());
 
 // CORS configuration from env
 const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
@@ -60,6 +77,7 @@ app.use('/api/ads', adRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
@@ -111,6 +129,7 @@ mongoose
 
     const { createServer } = require('http');
     const { Server } = require('socket.io');
+    const jwt = require('jsonwebtoken');
     const httpServer = createServer(app);
     const io = new Server(httpServer, {
       cors: {
@@ -120,14 +139,30 @@ mongoose
       }
     });
 
+    // Authenticate socket handshake using JWT
+    io.use((socket, next) => {
+      const token = socket.handshake.auth?.token;
+      if (!token) {
+        return next(new Error('Authentication error: No token provided'));
+      }
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        socket.userId = decoded.id;
+        next();
+      } catch (err) {
+        return next(new Error('Authentication error: Invalid token'));
+      }
+    });
+
     // Socket.io connection logic
     io.on('connection', (socket) => {
-      console.log('A user connected:', socket.id);
+      console.log('A user connected securely:', socket.id, 'User:', socket.userId);
 
-      socket.on('join', (userId) => {
-        socket.join(userId);
-        console.log(`User ${userId} joined their notification room`);
-      });
+      // Join the authenticated user's notification room automatically
+      if (socket.userId) {
+        socket.join(socket.userId);
+        console.log(`User ${socket.userId} joined their notification room automatically`);
+      }
 
       socket.on('disconnect', () => {
         console.log('User disconnected');

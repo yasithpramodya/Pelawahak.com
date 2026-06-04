@@ -3,6 +3,7 @@ import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { locations } from '../data/locations';
+import { uploadImage } from '../api/uploadApi';
 
 const PostAd = () => {
   const { user } = useContext(AuthContext);
@@ -19,6 +20,8 @@ const PostAd = () => {
   const [isOtherCity, setIsOtherCity] = useState(false);
   const [images, setImages] = useState([null, null, null, null, null]);
   const [imagePreviews, setImagePreviews] = useState([null, null, null, null, null]);
+  const [imageUrls, setImageUrls] = useState([null, null, null, null, null]); 
+  const [uploadingIndex, setUploadingIndex] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const navigate = useNavigate();
@@ -46,70 +49,112 @@ const PostAd = () => {
     }
   };
 
-  const handleFileChange = (index, e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const newImages = [...images];
-      newImages[index] = file;
-      setImages(newImages);
+ const handleFileChange = async (index, e) => {
+  const file = e.target.files[0];
+  if (!file) return;
 
-      const newPreviews = [...imagePreviews];
-      newPreviews[index] = URL.createObjectURL(file);
-      setImagePreviews(newPreviews);
-    }
-  };
+  // File size check
+  if (file.size > 5 * 1024 * 1024) {
+    setError('Image size must be less than 5MB');
+    return;
+  }
+
+  // Preview දෙන්න
+  const newPreviews = [...imagePreviews];
+  newPreviews[index] = URL.createObjectURL(file);
+  setImagePreviews(newPreviews);
+
+  // Cloudinary වලට upload කරන්න
+  try {
+    setUploadingIndex(index);
+    setError('');
+
+    const data = await uploadImage(file);
+
+    // URL save කරන්න
+    const newUrls = [...imageUrls];
+    newUrls[index] = data.url;
+    setImageUrls(newUrls);
+
+    setUploadingIndex(null);
+  } catch (err) {
+    setError('Image upload failed. Please try again.');
+    setUploadingIndex(null);
+
+    // Preview remove කරන්න
+    const newPreviews = [...imagePreviews];
+    newPreviews[index] = null;
+    setImagePreviews(newPreviews);
+  }
+};
 
   const handleRemoveImage = (index) => {
-      const newImages = [...images];
-      newImages[index] = null;
-      setImages(newImages);
+  const newImages = [...images];
+  newImages[index] = null;
+  setImages(newImages);
 
-      const newPreviews = [...imagePreviews];
-      newPreviews[index] = null;
-      setImagePreviews(newPreviews);
-  };
+  const newPreviews = [...imagePreviews];
+  newPreviews[index] = null;
+  setImagePreviews(newPreviews);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (user.role === 'user' && user.freeAdsRemaining <= 0) {
-      setError('You have reached your free ad limit. Please upgrade to post more.');
-      return;
-    }
+  // Cloudinary URL ද remove කරන්න
+  const newUrls = [...imageUrls];
+  newUrls[index] = null;
+  setImageUrls(newUrls);
+};
 
-    const data = new FormData();
-    data.append('title', formData.title);
-    data.append('description', formData.description);
-    data.append('category', formData.category);
-    data.append('district', formData.district);
-    
-    // Use the custom city if "Other" is selected
-    const finalCity = isOtherCity ? formData.otherCity : formData.city;
-    data.append('city', finalCity);
-    
-    data.append('price', formData.price);
-    data.append('phone', formData.phone);
-    
-    images.forEach(img => {
-      if (img) data.append('images', img);
-    });
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      await api.post('/ads', data);
-      
-      // Update local storage to decrement ad count
-      const updatedUser = { ...user, freeAdsRemaining: user.freeAdsRemaining - 1 };
-      localStorage.setItem('user', JSON.stringify(updatedUser)); // Very basic sync approach
-      
-      setSuccess('Ad posted successfully! It is pending approval from an admin.');
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 2000);
-    } catch (err) {
-      console.error('Post Ad Error:', err);
-      const msg = err.response?.data?.message || err.response?.data?.error || err.message || 'Error posting ad';
-      setError(msg);
-    }
-  };
+  if (user.role === 'user' && user.freeAdsRemaining <= 0) {
+    setError('You have reached your free ad limit. Please upgrade to post more.');
+    return;
+  }
+
+  // අවම වශයෙන් image එකක් upload වෙලාද check කරන්න
+  const validUrls = imageUrls.filter(url => url !== null);
+  if (validUrls.length === 0) {
+    setError('Please upload at least one image.');
+    return;
+  }
+
+  // Upload pending images තිබේදැයි check
+  if (uploadingIndex !== null) {
+    setError('Please wait for image upload to complete.');
+    return;
+  }
+
+  const data = new FormData();
+  data.append('title', formData.title);
+  data.append('description', formData.description);
+  data.append('category', formData.category);
+  data.append('district', formData.district);
+
+  const finalCity = isOtherCity ? formData.otherCity : formData.city;
+  data.append('city', finalCity);
+  data.append('price', formData.price);
+  data.append('phone', formData.phone);
+
+  // Files වෙනුවට Cloudinary URLs දාන්න
+  validUrls.forEach(url => {
+    data.append('imageUrls', url);
+  });
+
+  try {
+    await api.post('/ads', data);
+
+    const updatedUser = { ...user, freeAdsRemaining: user.freeAdsRemaining - 1 };
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+
+    setSuccess('Ad posted successfully! It is pending approval from an admin.');
+    setTimeout(() => navigate('/dashboard'), 2000);
+
+  } catch (err) {
+    console.error('Post Ad Error:', err);
+    const msg = err.response?.data?.message || err.response?.data?.error || err.message || 'Error posting ad';
+    setError(msg);
+  }
+};
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 md:py-16 animate-fadeIn">
@@ -273,31 +318,37 @@ const PostAd = () => {
                       key={index} 
                       className={`relative border-2 border-dashed border-light-grey/20 rounded-3xl flex flex-col items-center justify-center bg-warm-white hover:bg-white hover:border-light-grey transition-all overflow-hidden group shadow-sm ${index === 0 ? 'col-span-2 h-56' : 'h-32'}`}
                     >
-                       {imagePreviews[index] ? (
-                          <>
-                            <img src={imagePreviews[index]} alt={`Preview ${index}`} className="w-full h-full object-cover" />
-                            <div className="absolute inset-0 bg-near-black/40 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                               <button 
-                                  type="button" 
-                                  onClick={() => handleRemoveImage(index)}
-                                  className="bg-red-500 text-white rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-red-600 shadow-xl"
-                               >
-                                  Discard
-                               </button>
-                            </div>
-                          </>
-                       ) : (
-                          <>
-                             <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary-rose text-2xl mb-2 shadow-sm">+</div>
-                             <span className="text-[9px] font-black text-dark-grey/40 uppercase tracking-[0.2em]">{index === 0 ? 'Primary Slot' : `Extra Slot ${index + 1}`}</span>
-                             <input 
-                                type="file" 
-                                accept="image/*"
-                                onChange={(e) => handleFileChange(index, e)}
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                             />
-                          </>
-                       )}
+                       {uploadingIndex === index ? (
+  // Uploading animation
+  <div className="flex flex-col items-center gap-2">
+    <div className="w-8 h-8 border-4 border-primary-rose border-t-transparent rounded-full animate-spin"></div>
+    <span className="text-[9px] font-black text-primary-rose uppercase tracking-widest">Uploading...</span>
+  </div>
+) : imagePreviews[index] ? (
+  <>
+    <img src={imagePreviews[index]} alt={`Preview ${index}`} className="w-full h-full object-cover" />
+    <div className="absolute inset-0 bg-near-black/40 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+      <button
+        type="button"
+        onClick={() => handleRemoveImage(index)}
+        className="bg-red-500 text-white rounded-xl px-4 py-2 text-[10px] font-black uppercase tracking-widest hover:bg-red-600 shadow-xl"
+      >
+        Discard
+      </button>
+    </div>
+  </>
+) : (
+  <>
+    <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-primary-rose text-2xl mb-2 shadow-sm">+</div>
+    <span className="text-[9px] font-black text-dark-grey/40 uppercase tracking-[0.2em]">{index === 0 ? 'Primary Slot' : `Extra Slot ${index + 1}`}</span>
+    <input
+      type="file"
+      accept="image/*"
+      onChange={(e) => handleFileChange(index, e)}
+      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+    />
+  </>
+)}
                     </div>
                  ))}
               </div>

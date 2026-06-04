@@ -20,11 +20,13 @@ const Chat = () => {
   // Initialize Socket
   useEffect(() => {
     if (user) {
-  // NEW:
       const socketHost = import.meta.env.VITE_SOCKET_URL || BASE_URL;
-      const newSocket = io(socketHost);
+      const newSocket = io(socketHost, {
+        auth: {
+          token: localStorage.getItem('token')
+        }
+      });
       setSocket(newSocket);
-      newSocket.emit('join', user._id);
       
       newSocket.on('receiveMessage', (message) => {
         const senderId = message.sender._id || message.sender;

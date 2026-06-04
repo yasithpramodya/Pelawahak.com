@@ -28,10 +28,29 @@ const checkFileType = (file, cb) => {
   }
 };
 
-// Storage configuration (Switch between S3 and Local)
+// Storage configuration (Switch between Cloudinary, S3 and Local)
 let storage;
 
-if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && process.env.AWS_BUCKET_NAME) {
+if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
+  console.log('✅ Cloudinary Storage enabled in uploadMiddleware');
+  const { CloudinaryStorage } = require('multer-storage-cloudinary');
+  const cloudinary = require('cloudinary').v2;
+
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+
+  storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+      folder: 'pelawahak',
+      allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+      transformation: [{ width: 800, quality: 'auto' }],
+    },
+  });
+} else if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && process.env.AWS_BUCKET_NAME) {
   console.log('✅ AWS S3 Storage enabled');
   storage = multerS3({
     s3: s3,

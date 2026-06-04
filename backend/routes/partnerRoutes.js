@@ -13,8 +13,12 @@ router.post('/', protect, upload.array('images', 3), async (req, res) => {
     const { title, gender, age, religion, profession, district, city, height, education, description, phone } = req.body;
     
     let imagePaths = [];
-    if (req.files) {
-      imagePaths = req.files.map(file => file.location || `/uploads/${file.filename}`);
+    if (req.files && req.files.length > 0) {
+      imagePaths = req.files.map(file => file.path || file.location || `/uploads/${file.filename}`);
+    } else if (req.body.imageUrls) {
+      imagePaths = Array.isArray(req.body.imageUrls) ? req.body.imageUrls : [req.body.imageUrls];
+    } else if (req.body.images) {
+      imagePaths = Array.isArray(req.body.images) ? req.body.images : [req.body.images];
     }
 
     const partner = await Partner.create({
