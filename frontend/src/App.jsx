@@ -18,13 +18,27 @@ import { useContext } from 'react';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
-  if (loading) return <div>Loading...</div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-warm-white">
+      <div className="flex flex-col items-center gap-4">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-primary-rose"></div>
+        <p className="text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.4em]">Loading...</p>
+      </div>
+    </div>
+  );
   return user ? children : <Navigate to="/login" />;
 };
 
 const AdminRoute = ({ children }) => {
   const { user, loading } = useContext(AuthContext);
-  if (loading) return <div>Loading...</div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-warm-white">
+      <div className="flex flex-col items-center gap-4">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-primary-rose"></div>
+        <p className="text-[10px] font-black text-dark-grey/40 uppercase tracking-[0.4em]">Loading...</p>
+      </div>
+    </div>
+  );
   return user && user.role === 'admin' ? children : <Navigate to="/" />;
 };
 

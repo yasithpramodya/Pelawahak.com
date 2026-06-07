@@ -79,7 +79,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="pt-12 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-8">
           <p className="text-[10px] font-black text-wedding-cream/40 uppercase tracking-[0.5em]">
-            © 2026 PELAWAHAK.LK MATCHMAKING. ALL RIGHTS RESERVED.
+            © 2026 PELAWAHAK.COM. ALL RIGHTS RESERVED.
           </p>
           <div className="flex gap-12 items-center">
             <span className="text-[10px] font-black text-wedding-cream/30 uppercase tracking-widest bg-white/5 px-4 py-2 rounded-full">Premium UI by YPM</span>

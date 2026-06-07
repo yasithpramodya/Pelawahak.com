@@ -3,6 +3,7 @@ import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { locations } from '../data/locations';
+import { uploadImage } from '../api/uploadApi';
 
 const PostPartner = () => {
   const { user } = useContext(AuthContext);
@@ -22,8 +23,9 @@ const PostPartner = () => {
     phone: ''
   });
 
-  const [images, setImages] = useState([null, null, null]);
-  const [previews, setPreviews] = useState([null, null, null]);
+  const [imagePreviews, setImagePreviews] = useState([null, null, null]);
+  const [imageUrls, setImageUrls] = useState([null, null, null]);
+  const [uploadingIndex, setUploadingIndex] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -42,30 +44,59 @@ const PostPartner = () => {
     }
   };
 
-  const handleFileChange = (index, e) => {
+  const handleFileChange = async (index, e) => {
     const file = e.target.files[0];
-    if (file) {
-      const newImages = [...images];
-      newImages[index] = file;
-      setImages(newImages);
+    if (!file) return;
 
-      const newPreviews = [...previews];
-      newPreviews[index] = URL.createObjectURL(file);
-      setPreviews(newPreviews);
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Image size must be less than 5MB');
+      return;
     }
+
+    const newPreviews = [...imagePreviews];
+    newPreviews[index] = URL.createObjectURL(file);
+    setImagePreviews(newPreviews);
+
+    try {
+      setUploadingIndex(index);
+      setError('');
+      const data = await uploadImage(file);
+      const newUrls = [...imageUrls];
+      newUrls[index] = data.url;
+      setImageUrls(newUrls);
+      setUploadingIndex(null);
+    } catch (err) {
+      setError('Image upload failed. Please try again.');
+      setUploadingIndex(null);
+      const newPrevs = [...imagePreviews];
+      newPrevs[index] = null;
+      setImagePreviews(newPrevs);
+    }
+  };
+
+  const handleRemoveImage = (index) => {
+    const newPreviews = [...imagePreviews];
+    newPreviews[index] = null;
+    setImagePreviews(newPreviews);
+    const newUrls = [...imageUrls];
+    newUrls[index] = null;
+    setImageUrls(newUrls);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (uploadingIndex !== null) {
+      setError('Please wait for image upload to complete.');
+      return;
+    }
     setLoading(true);
     setError('');
 
     const data = new FormData();
     Object.keys(formData).forEach(key => data.append(key, formData[key]));
     
-    images.forEach(img => {
-      if (img) data.append('images', img);
-    });
+    const validUrls = imageUrls.filter(url => url !== null);
+    validUrls.forEach(url => data.append('imageUrls', url));
 
     try {
       await api.post('/partners', data);
@@ -221,16 +252,18 @@ const PostPartner = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {[0, 1, 2].map(i => (
               <div key={i} className="relative aspect-[4/5] bg-warm-white rounded-[2.5rem] border-2 border-dashed border-light-grey/20 overflow-hidden group hover:border-light-grey hover:bg-white transition-all shadow-sm">
-                {previews[i] ? (
+                {uploadingIndex === i ? (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+                    <div className="w-8 h-8 border-4 border-primary-rose border-t-transparent rounded-full animate-spin"></div>
+                    <span className="text-[9px] font-black text-primary-rose uppercase tracking-widest">Uploading...</span>
+                  </div>
+                ) : imagePreviews[i] ? (
                   <>
-                    <img src={previews[i]} alt="Preview" className="w-full h-full object-cover" />
+                    <img src={imagePreviews[i]} alt="Preview" className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-near-black/40 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                        <button 
                           type="button" 
-                          onClick={() => {
-                             const newImgs = [...images]; newImgs[i] = null; setImages(newImgs);
-                             const newPrevs = [...previews]; newPrevs[i] = null; setPreviews(newPrevs);
-                          }}
+                          onClick={() => handleRemoveImage(i)}
                           className="bg-red-500 text-white px-5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-red-600 shadow-xl"
                        >
                          Discard
@@ -243,12 +276,14 @@ const PostPartner = () => {
                     <span className="text-[9px] font-black uppercase tracking-[0.2em]">{i === 0 ? 'Spotlight Slot' : `Auxiliary Slot ${i + 1}`}</span>
                   </div>
                 )}
-                <input 
-                  type="file" 
-                  className="absolute inset-0 opacity-0 cursor-pointer" 
-                  onChange={(e) => handleFileChange(i, e)}
-                  accept="image/*"
-                />
+                {!imagePreviews[i] && uploadingIndex !== i && (
+                  <input 
+                    type="file" 
+                    className="absolute inset-0 opacity-0 cursor-pointer" 
+                    onChange={(e) => handleFileChange(i, e)}
+                    accept="image/*"
+                  />
+                )}
               </div>
             ))}
           </div>
