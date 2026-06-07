@@ -62,7 +62,7 @@ const AdDetails = () => {
 
   const images = ad.images && Array.isArray(ad.images) && ad.images.length > 0 
       ? ad.images.map(img => getImageUrl(img))
-      : ['https://via.placeholder.com/600x400?text=No+Image'];
+      : ['https://placehold.co/600x400?text=No+Image'];
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-12 animate-fadeIn space-y-8 md:space-y-12">
       <div className="bg-white rounded-[2rem] md:rounded-[3rem] shadow-2xl overflow-hidden border border-light-grey/10">

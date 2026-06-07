@@ -21,7 +21,7 @@ const formatTimeAgo = (dateString) => {
 const AdCard = ({ ad }) => {
   const imageUrl = ad.images && ad.images.length > 0 
     ? getImageUrl(ad.images[0]) 
-    : 'https://via.placeholder.com/600x400?text=Premium+Wedding+Service';
+    : 'https://placehold.co/600x400?text=Premium+Wedding+Service';
 
   return (
     <Link to={`/ad/${ad._id}`} className="group block glass-card rounded-[2.5rem] overflow-hidden flex flex-col md:flex-row h-auto md:h-64 transition-all duration-700 hover:-translate-y-2">

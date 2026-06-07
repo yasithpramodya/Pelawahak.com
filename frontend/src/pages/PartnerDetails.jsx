@@ -62,7 +62,7 @@ const PartnerDetails = () => {
 
   const images = partner.images && Array.isArray(partner.images) && partner.images.length > 0 
       ? partner.images.map(img => getImageUrl(img))
-      : ['https://via.placeholder.com/600x800?text=Profile+Image'];
+      : ['https://placehold.co/600x800?text=Profile+Image'];
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-12 animate-fadeIn">

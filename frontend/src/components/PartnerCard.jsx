@@ -5,7 +5,7 @@ import { getImageUrl } from '../services/api';
 const PartnerCard = ({ partner }) => {
   const imageUrl = partner.images && partner.images.length > 0 
     ? getImageUrl(partner.images[0]) 
-    : 'https://via.placeholder.com/400x600?text=Premium+Partner+Profile';
+    : 'https://placehold.co/400x600?text=Premium+Partner+Profile';
 
   return (
     <Link to={`/partner/${partner._id}`} className="group glass-card rounded-[3rem] overflow-hidden flex flex-col md:flex-row h-auto md:h-80 transition-all duration-700 hover:-translate-y-2">
