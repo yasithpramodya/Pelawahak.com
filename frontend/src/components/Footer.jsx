@@ -17,7 +17,7 @@ const Footer = () => {
                 </svg>
                 <div className="flex flex-col">
                   <span className="text-xl md:text-2xl font-serif font-black tracking-widest text-wedding-cream uppercase leading-none">
-                    Pelawahak<span className="text-primary-rose">.lk</span>
+                    Pelawahak<span className="text-primary-rose">.com</span>
                   </span>
                   <span className="text-[7px] md:text-[8px] font-bold text-wedding-cream/60 uppercase tracking-[0.3em] mt-1">
                     Your Wedding, Your Way
