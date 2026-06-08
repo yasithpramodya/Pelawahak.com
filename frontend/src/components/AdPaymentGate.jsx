@@ -73,7 +73,7 @@ const AdPaymentGate = ({ onSuccess }) => {
           
           <div className="w-full mt-auto">
             {paypalClientId && paypalClientId !== 'YOUR_PAYPAL_SANDBOX_CLIENT_ID' ? (
-              <PayPalScriptProvider options={{ "client-id": paypalClientId, currency: "USD", intent: "capture" }}>
+              <PayPalScriptProvider options={{ "client-id": paypalClientId, currency: "USD", intent: "capture", "enable-funding": "card" }}>
                 <PayPalButtons
                   style={{ layout: "vertical", height: 48, shape: "rect", color: "gold" }}
                   createOrder={handleBuyAdOrder}

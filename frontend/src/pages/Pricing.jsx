@@ -155,7 +155,7 @@ const Pricing = () => {
                   </div>
                 ) : paypalClientId && paypalClientId !== 'YOUR_PAYPAL_SANDBOX_CLIENT_ID' ? (
                   <div className="absolute inset-0 z-10 opacity-90 hover:opacity-100">
-                    <PayPalScriptProvider options={{ "client-id": paypalClientId, currency: "USD", intent: "capture" }}>
+                    <PayPalScriptProvider options={{ "client-id": paypalClientId, currency: "USD", intent: "capture", "enable-funding": "card" }}>
                       <PayPalButtons
                         style={{ layout: "horizontal", height: 48, shape: "rect", color: "gold", tagline: false }}
                         createOrder={() => handleSubscribeOrder(planKey)}

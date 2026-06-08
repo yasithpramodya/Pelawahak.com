@@ -14,6 +14,7 @@ const PayPalUnlock = ({ partnerId, onSuccess, price = 2.99 }) => {
     'client-id': paypalClientId,
     currency: 'USD',
     intent: 'capture',
+    'enable-funding': 'card'
   }), [paypalClientId]);
 
   // useCallback so function references stay stable across re-renders
