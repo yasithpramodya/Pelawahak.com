@@ -53,8 +53,23 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const refreshUser = async () => {
+    try {
+      // Assuming a GET /api/auth/me route exists, or we use a basic fetch if not.
+      // Alternatively, we can just take updated user data passed to this function.
+    } catch (error) {
+      console.error('Error refreshing user', error);
+    }
+  };
+
+  const updateUserState = (newUserData) => {
+    const updated = { ...user, ...newUserData };
+    localStorage.setItem('user', JSON.stringify(updated));
+    setUser(updated);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser, login, register, logout, loading }}>
+    <AuthContext.Provider value={{ user, setUser, login, register, logout, loading, updateUserState }}>
       {children}
     </AuthContext.Provider>
   );

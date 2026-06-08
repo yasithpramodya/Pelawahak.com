@@ -14,6 +14,7 @@ import PartnerDetails from './pages/PartnerDetails';
 import AdDetails from './pages/AdDetails';
 import Chat from './pages/Chat';
 import Footer from './components/Footer';
+import Pricing from './pages/Pricing';
 import { useContext } from 'react';
 
 const PrivateRoute = ({ children }) => {
@@ -56,6 +57,7 @@ function App() {
               <Route path="/partner" element={<Partner />} />
               <Route path="/ad/:id" element={<AdDetails />} />
               <Route path="/partner/:id" element={<PartnerDetails />} />
+              <Route path="/pricing" element={<Pricing />} />
 
               <Route path="/post-ad" element={
                 <PrivateRoute>

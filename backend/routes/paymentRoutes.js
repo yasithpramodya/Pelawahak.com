@@ -220,4 +220,120 @@ router.get('/check/:partnerId', protect, async (req, res) => {
   }
 });
 
+// Ad monetisation constants
+const AD_SLOT_PRICE = 1.20;
+const PLAN_PRICES = {
+  basic: 2.99,
+  standard: 5.99,
+  premium: 9.99
+};
+const PLAN_ADS = {
+  basic: 10,
+  standard: 30,
+  premium: 999999 // Representing unlimited
+};
+
+// @desc    Create a PayPal order to buy a single ad slot
+// @route   POST /api/payments/buy-ad-slot
+// @access  Private
+router.post('/buy-ad-slot', protect, async (req, res) => {
+  try {
+    const amount = AD_SLOT_PRICE;
+    const order = await createPayPalOrder(amount);
+    res.status(201).json({ orderID: order.id, amount });
+  } catch (error) {
+    console.error('Error creating PayPal order for ad slot:', error);
+    res.status(500).json({ message: error.message || 'Server error creating PayPal order' });
+  }
+});
+
+// @desc    Capture approved PayPal order and increment paidAdsRemaining
+// @route   POST /api/payments/capture-ad-slot
+// @access  Private
+router.post('/capture-ad-slot', protect, async (req, res) => {
+  try {
+    const { orderID } = req.body;
+    if (!orderID) {
+      return res.status(400).json({ message: 'OrderID is required' });
+    }
+
+    const captureResult = await capturePayPalOrder(orderID);
+    const captureStatus = captureResult.purchase_units?.[0]?.payments?.captures?.[0]?.status;
+    if (captureResult.status !== 'COMPLETED' && captureStatus !== 'COMPLETED') {
+      return res.status(400).json({ message: 'Payment capture was not completed', paypalStatus: captureResult.status });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { $inc: { paidAdsRemaining: 1 } },
+      { new: true }
+    );
+
+    res.status(200).json({ success: true, user: updatedUser });
+  } catch (error) {
+    console.error('Error capturing PayPal order for ad slot:', error);
+    res.status(500).json({ message: error.message || 'Server error capturing PayPal order' });
+  }
+});
+
+// @desc    Create a PayPal order for a subscription plan
+// @route   POST /api/payments/subscribe/:plan
+// @access  Private
+router.post('/subscribe/:plan', protect, async (req, res) => {
+  try {
+    const { plan } = req.params;
+    if (!PLAN_PRICES[plan]) {
+      return res.status(400).json({ message: 'Invalid subscription plan' });
+    }
+
+    const amount = PLAN_PRICES[plan];
+    const order = await createPayPalOrder(amount);
+    res.status(201).json({ orderID: order.id, amount, plan });
+  } catch (error) {
+    console.error(`Error creating PayPal order for plan ${req.params.plan}:`, error);
+    res.status(500).json({ message: error.message || 'Server error creating PayPal order' });
+  }
+});
+
+// @desc    Capture approved PayPal order and upgrade subscription
+// @route   POST /api/payments/capture-subscription/:plan
+// @access  Private
+router.post('/capture-subscription/:plan', protect, async (req, res) => {
+  try {
+    const { plan } = req.params;
+    const { orderID } = req.body;
+    
+    if (!PLAN_PRICES[plan]) {
+      return res.status(400).json({ message: 'Invalid subscription plan' });
+    }
+    if (!orderID) {
+      return res.status(400).json({ message: 'OrderID is required' });
+    }
+
+    const captureResult = await capturePayPalOrder(orderID);
+    const captureStatus = captureResult.purchase_units?.[0]?.payments?.captures?.[0]?.status;
+    if (captureResult.status !== 'COMPLETED' && captureStatus !== 'COMPLETED') {
+      return res.status(400).json({ message: 'Payment capture was not completed', paypalStatus: captureResult.status });
+    }
+
+    const oneMonthFromNow = new Date();
+    oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user._id,
+      { 
+        subscriptionPlan: plan,
+        subscriptionEndsAt: oneMonthFromNow,
+        freeAdsRemaining: PLAN_ADS[plan] // Reset their quota based on plan
+      },
+      { new: true }
+    );
+
+    res.status(200).json({ success: true, user: updatedUser });
+  } catch (error) {
+    console.error(`Error capturing PayPal order for plan ${req.params.plan}:`, error);
+    res.status(500).json({ message: error.message || 'Server error capturing PayPal order' });
+  }
+});
+
 module.exports = router;

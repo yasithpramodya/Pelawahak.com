@@ -27,6 +27,7 @@ const Navbar = () => {
     const links = [
       { path: '/', label: 'Home' },
       { path: '/partner', label: 'Find Partner' },
+      { path: '/pricing', label: 'Pricing' },
     ];
 
     if (user) {

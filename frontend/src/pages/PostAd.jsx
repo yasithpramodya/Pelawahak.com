@@ -4,6 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { locations } from '../data/locations';
 import { uploadImage } from '../api/uploadApi';
+import AdPaymentGate from '../components/AdPaymentGate';
 
 const PostAd = () => {
   const { user } = useContext(AuthContext);
@@ -103,13 +104,19 @@ const PostAd = () => {
   setImageUrls(newUrls);
 };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const isPremium = user?.subscriptionPlan === 'premium';
+  const hasFreeAds = user?.freeAdsRemaining > 0;
+  const hasPaidAds = user?.paidAdsRemaining > 0;
+  const isAdmin = user?.role === 'admin';
+  const canPost = isAdmin || isPremium || hasFreeAds || hasPaidAds;
 
-  if (user.role === 'user' && user.freeAdsRemaining <= 0) {
-    setError('You have reached your free ad limit. Please upgrade to post more.');
-    return;
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!canPost) {
+      setError('You have reached your ad limit. Please purchase an ad slot or upgrade.');
+      return;
+    }
 
   // අවම වශයෙන් image එකක් upload වෙලාද check කරන්න
   const validUrls = imageUrls.filter(url => url !== null);
@@ -140,11 +147,21 @@ const handleSubmit = async (e) => {
     data.append('imageUrls', url);
   });
 
-  try {
-    await api.post('/ads', data);
+    try {
+      const res = await api.post('/ads', data);
 
-    const updatedUser = { ...user, freeAdsRemaining: user.freeAdsRemaining - 1 };
-    localStorage.setItem('user', JSON.stringify(updatedUser));
+      // We should ideally fetch the fresh user from backend here, but for now we manually
+      // adjust local state. If they used a free ad, decrement it. If paid, decrement paid.
+      let updatedUser = { ...user };
+      if (!isAdmin && !isPremium) {
+        if (hasFreeAds) {
+          updatedUser.freeAdsRemaining -= 1;
+        } else if (hasPaidAds) {
+          updatedUser.paidAdsRemaining -= 1;
+        }
+      }
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      // You'd also call setUser(updatedUser) here ideally, but navigate handles unmount.
 
     setSuccess('Ad posted successfully! It is pending approval from an admin.');
     setTimeout(() => navigate('/dashboard'), 2000);
@@ -165,14 +182,23 @@ const handleSubmit = async (e) => {
 
 
       {user.role === 'user' && (
-        <div className="bg-warm-white border border-light-grey/20 text-near-black p-6 rounded-[2rem] mb-10 flex items-center justify-between shadow-sm">
+        <div className="bg-warm-white border border-light-grey/20 text-near-black p-6 rounded-[2rem] mb-10 flex items-center justify-between shadow-sm flex-wrap gap-4">
           <div className="flex items-center gap-4">
              <span className="text-2xl">✨</span>
              <div>
-                <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Membership Usage</p>
-                <p className="font-black text-xs uppercase tracking-tight">You have <span className="text-primary-rose text-lg">{user.freeAdsRemaining}</span> free ad(s) remaining.</p>
+                <p className="text-[10px] font-black uppercase tracking-widest opacity-40">Membership: {user.subscriptionPlan || 'Free'}</p>
+                <p className="font-black text-xs uppercase tracking-tight">
+                  {isPremium ? 'Unlimited Posts' : (
+                    <>You have <span className="text-primary-rose text-lg">{user.freeAdsRemaining || 0}</span> free ad(s) and <span className="text-primary-rose text-lg">{user.paidAdsRemaining || 0}</span> paid ad(s) remaining.</>
+                  )}
+                </p>
              </div>
           </div>
+          {!canPost && (
+            <a href="#payment-gate" className="bg-primary-rose text-white px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl">
+              Get More Ads
+            </a>
+          )}
         </div>
       )}
 
@@ -358,18 +384,27 @@ const handleSubmit = async (e) => {
               </div>
            </div>
 
-        <div className="mt-16 pt-10 border-t border-light-grey/10 flex flex-col md:flex-row items-center justify-between gap-8">
-          <div className="flex items-center gap-4 text-dark-grey/60">
-             <span className="text-2xl">💍</span>
-             <p className="text-[10px] font-black uppercase tracking-widest max-w-[200px] leading-tight">By publishing, you agree to comply with our professional quality guidelines.</p>
-          </div>
-          <button 
-            type="submit" 
-            className="w-full md:w-auto bg-primary-rose text-white hover:bg-deep-rose transition-all font-black py-5 px-16 rounded-2xl shadow-2xl shadow-primary-rose/30 text-xs uppercase tracking-[0.3em] active:scale-95 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed" 
-            disabled={user.role === 'user' && user.freeAdsRemaining <= 0}
-          >
-            Publish Listing
-          </button>
+        <div className="mt-16 pt-10 border-t border-light-grey/10 flex flex-col items-center justify-center gap-8">
+          
+          {!canPost ? (
+            <div id="payment-gate" className="w-full animate-fadeIn">
+              <AdPaymentGate onSuccess={() => setError('')} />
+            </div>
+          ) : (
+            <div className="flex flex-col md:flex-row items-center justify-between gap-8 w-full">
+              <div className="flex items-center gap-4 text-dark-grey/60">
+                <span className="text-2xl">💍</span>
+                <p className="text-[10px] font-black uppercase tracking-widest max-w-[200px] leading-tight">By publishing, you agree to comply with our professional quality guidelines.</p>
+              </div>
+              <button 
+                type="submit" 
+                className="w-full md:w-auto bg-primary-rose text-white hover:bg-deep-rose transition-all font-black py-5 px-16 rounded-2xl shadow-2xl shadow-primary-rose/30 text-xs uppercase tracking-[0.3em] active:scale-95 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed" 
+                disabled={!canPost}
+              >
+                Publish Listing
+              </button>
+            </div>
+          )}
         </div>
       </form>
     </div>

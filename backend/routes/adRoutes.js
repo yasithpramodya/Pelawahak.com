@@ -13,18 +13,41 @@ router.post('/', protect, upload.array('images', 5), async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 
-    if (user.role === 'user' && user.freeAdsRemaining <= 0) {
-      return res.status(403).json({ message: 'Free ad limit reached. Please upgrade.' });
-    }
+    if (user.role !== 'admin') {
+      let isPremium = user.subscriptionPlan === 'premium';
+      if (!isPremium && user.subscriptionEndsAt && new Date() > new Date(user.subscriptionEndsAt)) {
+        isPremium = false;
+      }
 
-    if (user.role === 'user') {
-      const updatedUser = await User.findOneAndUpdate(
-        { _id: req.user._id, freeAdsRemaining: { $gt: 0 } },
-        { $inc: { freeAdsRemaining: -1 } },
-        { new: true }
-      );
-      if (!updatedUser) {
-        return res.status(403).json({ message: 'Free ad limit reached. Please upgrade.' });
+      let canPost = false;
+      let decrementQuery = null;
+
+      if (isPremium) {
+        canPost = true;
+      } else if (user.freeAdsRemaining > 0) {
+        canPost = true;
+        decrementQuery = { $inc: { freeAdsRemaining: -1 } };
+      } else if (user.paidAdsRemaining > 0) {
+        canPost = true;
+        decrementQuery = { $inc: { paidAdsRemaining: -1 } };
+      }
+
+      if (!canPost) {
+        return res.status(403).json({ 
+          message: 'Ad limit reached. Please purchase an ad slot or upgrade your subscription.',
+          canBuy: true 
+        });
+      }
+
+      if (decrementQuery) {
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: req.user._id },
+          decrementQuery,
+          { new: true }
+        );
+        if (!updatedUser) {
+          return res.status(500).json({ message: 'Error updating user quotas.' });
+        }
       }
     }
 
