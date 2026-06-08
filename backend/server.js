@@ -14,6 +14,7 @@ const adminRoutes = require('./routes/adminRoutes');
 const partnerRoutes = require('./routes/partnerRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
 
 dotenv.config();
 
@@ -79,6 +80,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/partners', partnerRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

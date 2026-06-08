@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import api, { getImageUrl } from '../services/api';
+import { AuthContext } from '../context/AuthContext';
+import PayPalUnlock from '../components/PayPalUnlock';
 
 const PartnerDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const [partner, setPartner] = useState(null);
+  const [unlocked, setUnlocked] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [mainImageIndex, setMainImageIndex] = useState(0);
@@ -17,7 +21,8 @@ const PartnerDetails = () => {
       setLoading(true);
       try {
         const res = await api.get(`/partners/${id}`);
-        setPartner(res.data);
+        setPartner(res.data.partner);
+        setUnlocked(res.data.unlocked);
       } catch (err) {
         console.error('Fetch error:', err);
         if (err.response?.status === 404) {
@@ -79,14 +84,27 @@ const PartnerDetails = () => {
               <img 
                 src={images[mainImageIndex]} 
                 alt={partner.title} 
-                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                className={`w-full h-full object-cover transition-transform duration-1000 ${unlocked ? 'group-hover:scale-110' : 'blur-2xl select-none pointer-events-none scale-105'}`}
               />
-              <div className="absolute bottom-8 left-8 right-8">
-                 <div className="bg-black/30 backdrop-blur-xl p-5 rounded-2xl border border-white/20 text-white shadow-2xl">
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-80 mb-1">Official Profile Photo</p>
-                    <p className="text-sm font-black uppercase tracking-widest">IMAGE {mainImageIndex + 1} OF {images.length}</p>
-                 </div>
-              </div>
+              {!unlocked && (
+                <div className="absolute inset-0 bg-black/45 flex flex-col items-center justify-center p-6 text-white text-center">
+                  <div className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mb-4 border border-white/30 animate-pulse">
+                    <span className="text-3xl">🔒</span>
+                  </div>
+                  <h3 className="font-black uppercase tracking-widest text-sm mb-2">Photo Locked</h3>
+                  <p className="text-[10px] text-white/70 uppercase tracking-widest leading-relaxed max-w-[200px]">
+                    Unlock this profile to view all high-quality photos
+                  </p>
+                </div>
+              )}
+              {unlocked && (
+                <div className="absolute bottom-8 left-8 right-8">
+                   <div className="bg-black/30 backdrop-blur-xl p-5 rounded-2xl border border-white/20 text-white shadow-2xl">
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-80 mb-1">Official Profile Photo</p>
+                      <p className="text-sm font-black uppercase tracking-widest">IMAGE {mainImageIndex + 1} OF {images.length}</p>
+                   </div>
+                </div>
+              )}
             </div>
             
             {/* Thumbnails */}
@@ -95,8 +113,9 @@ const PartnerDetails = () => {
                 {images.map((img, index) => (
                   <button 
                     key={index} 
-                    onClick={() => setMainImageIndex(index)}
-                    className={`h-24 w-20 flex-shrink-0 cursor-pointer border-4 rounded-[1.5rem] overflow-hidden transition-all duration-500 ${mainImageIndex === index ? 'border-light-grey ring-8 ring-primary-rose/5 scale-110' : 'border-white hover:border-light-grey/20'}`}
+                    onClick={() => unlocked && setMainImageIndex(index)}
+                    disabled={!unlocked}
+                    className={`h-24 w-20 flex-shrink-0 cursor-pointer border-4 rounded-[1.5rem] overflow-hidden transition-all duration-500 ${!unlocked ? 'opacity-50 cursor-not-allowed filter blur-[2px]' : mainImageIndex === index ? 'border-light-grey ring-8 ring-primary-rose/5 scale-110' : 'border-white hover:border-light-grey/20'}`}
                   >
                     <img src={img} alt={`Thumbnail ${index}`} className="w-full h-full object-cover" />
                   </button>
@@ -156,44 +175,77 @@ const PartnerDetails = () => {
               </p>
             </div>
 
-            {/* SELLER CARD */}
-            <div className="mt-auto bg-earth-gradient rounded-[2rem] md:rounded-[3.5rem] p-8 md:p-12 text-wedding-cream shadow-[0_40px_80px_-20px_rgba(45,27,23,0.4)] relative overflow-hidden group mb-4 md:mb-0">
-              <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:rotate-45 transition-transform duration-1000">
-                 <span className="text-[8rem] md:text-[12rem] font-black text-primary-rose">💍</span>
-              </div>
-              <h3 className="text-[9px] md:text-[10px] font-black text-wedding-cream/60 uppercase tracking-[0.3em] mb-8">Direct Contact Interface</h3>
-              <div className="flex items-center gap-6 md:gap-8 mb-12 relative z-10">
-                <div className="w-16 h-16 md:w-24 md:h-24 bg-primary-rose rounded-[1.5rem] md:rounded-[2.5rem] flex items-center justify-center text-3xl md:text-5xl font-black text-white shadow-2xl rotate-3">
-                  {partner.user?.name ? partner.user.name.charAt(0) : 'U'}
+            {/* SELLER CARD / PAYMENT CARD */}
+            {!unlocked ? (
+              <div className="mt-auto bg-earth-gradient rounded-[2rem] md:rounded-[3.5rem] p-8 md:p-10 text-wedding-cream shadow-[0_40px_80px_-20px_rgba(45,27,23,0.4)] relative overflow-hidden group mb-4 md:mb-0">
+                <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:rotate-45 transition-transform duration-1000">
+                   <span className="text-[8rem] md:text-[12rem] font-black text-primary-rose">🔒</span>
                 </div>
-                <div className="overflow-hidden">
-                  <p className="font-black text-white text-xl md:text-3xl uppercase tracking-tighter leading-none mb-2 truncate">{partner.user?.name || 'Verified Member'}</p>
-                  <p className="text-[10px] md:text-[11px] text-primary-rose font-black tracking-[0.2em] truncate opacity-60 italic">{partner.user?.email || 'Contact Info Hidden'}</p>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-4 md:gap-5 relative z-10">
-                {partner.phone && (
-                  <button 
-                    onClick={() => setShowNumber(!showNumber)}
-                    className="w-full flex items-center justify-center gap-4 bg-white text-near-black hover:bg-primary-rose hover:text-white font-black py-5 md:py-7 px-8 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl transition-all duration-500 transform active:scale-95"
-                  >
-                    <span className="text-2xl md:text-4xl group-hover:rotate-12 transition-transform">👰</span>
-                    <span className="text-sm md:text-xl tracking-tighter uppercase whitespace-nowrap">
-                      {showNumber ? partner.phone : 'REVEAL CONTACT NUMBER'}
-                    </span>
-                  </button>
-                )}
+                <h3 className="text-[9px] md:text-[10px] font-black text-wedding-cream/60 uppercase tracking-[0.3em] mb-6">Direct Contact Interface Locked</h3>
                 
-                <Link 
-                  to={`/chat?receiver=${partner.user?._id}`}
-                  className="w-full flex items-center justify-center gap-4 bg-transparent border-2 border-white/30 text-white hover:bg-white/10 font-black py-5 md:py-7 px-8 rounded-[2rem] md:rounded-[2.5rem] transition-all duration-500 transform active:scale-95 shadow-xl"
-                >
-                  <span className="text-2xl md:text-4xl">💬</span>
-                  <span className="text-sm md:text-xl tracking-tighter uppercase">START A SECURE CHAT</span>
-                </Link>
+                <div className="relative z-10 w-full">
+                  {user ? (
+                    <PayPalUnlock 
+                      partnerId={id} 
+                      onSuccess={() => setUnlocked(true)}
+                    />
+                  ) : (
+                    <div className="bg-white/10 backdrop-blur-md p-8 rounded-[2rem] border border-white/20 text-center flex flex-col items-center">
+                      <span className="text-3xl mb-4">🔐</span>
+                      <h4 className="font-black uppercase tracking-wider text-sm text-white mb-2">Authentication Required</h4>
+                      <p className="text-wedding-cream/75 text-xs font-semibold mb-6 max-w-xs leading-relaxed">
+                        Please register or log in to your account to unlock this profile.
+                      </p>
+                      <Link 
+                        to="/login" 
+                        state={{ from: `/partner/${id}` }}
+                        className="bg-white text-near-black font-black uppercase text-[10px] tracking-widest px-8 py-4 rounded-2xl shadow-xl hover:bg-primary-rose hover:text-white transition-all duration-300"
+                      >
+                        Log In / Register
+                      </Link>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="mt-auto bg-earth-gradient rounded-[2rem] md:rounded-[3.5rem] p-8 md:p-12 text-wedding-cream shadow-[0_40px_80px_-20px_rgba(45,27,23,0.4)] relative overflow-hidden group mb-4 md:mb-0">
+                <div className="absolute top-0 right-0 p-10 opacity-5 group-hover:rotate-45 transition-transform duration-1000">
+                   <span className="text-[8rem] md:text-[12rem] font-black text-primary-rose">💍</span>
+                </div>
+                <h3 className="text-[9px] md:text-[10px] font-black text-wedding-cream/60 uppercase tracking-[0.3em] mb-8">Direct Contact Interface</h3>
+                <div className="flex items-center gap-6 md:gap-8 mb-12 relative z-10">
+                  <div className="w-16 h-16 md:w-24 md:h-24 bg-primary-rose rounded-[1.5rem] md:rounded-[2.5rem] flex items-center justify-center text-3xl md:text-5xl font-black text-white shadow-2xl rotate-3">
+                    {partner.user?.name ? partner.user.name.charAt(0) : 'U'}
+                  </div>
+                  <div className="overflow-hidden">
+                    <p className="font-black text-white text-xl md:text-3xl uppercase tracking-tighter leading-none mb-2 truncate">{partner.user?.name || 'Verified Member'}</p>
+                    <p className="text-[10px] md:text-[11px] text-primary-rose font-black tracking-[0.2em] truncate opacity-60 italic">{partner.user?.email || 'Contact Info Hidden'}</p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-4 md:gap-5 relative z-10">
+                  {partner.phone && (
+                    <button 
+                      onClick={() => setShowNumber(!showNumber)}
+                      className="w-full flex items-center justify-center gap-4 bg-white text-near-black hover:bg-primary-rose hover:text-white font-black py-5 md:py-7 px-8 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl transition-all duration-500 transform active:scale-95"
+                    >
+                      <span className="text-2xl md:text-4xl group-hover:rotate-12 transition-transform">👰</span>
+                      <span className="text-sm md:text-xl tracking-tighter uppercase whitespace-nowrap">
+                        {showNumber ? partner.phone : 'REVEAL CONTACT NUMBER'}
+                      </span>
+                    </button>
+                  )}
+                  
+                  <Link 
+                    to={`/chat?receiver=${partner.user?._id}`}
+                    className="w-full flex items-center justify-center gap-4 bg-transparent border-2 border-white/30 text-white hover:bg-white/10 font-black py-5 md:py-7 px-8 rounded-[2rem] md:rounded-[2.5rem] transition-all duration-500 transform active:scale-95 shadow-xl"
+                  >
+                    <span className="text-2xl md:text-4xl">💬</span>
+                    <span className="text-sm md:text-xl tracking-tighter uppercase">START A SECURE CHAT</span>
+                  </Link>
+                </div>
+              </div>
+            )}
 
           </div>
 

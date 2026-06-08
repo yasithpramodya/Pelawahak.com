@@ -14,9 +14,19 @@ const PartnerCard = ({ partner }) => {
         <img 
           src={imageUrl} 
           alt={partner.title} 
-          className="w-full h-full object-cover transition-transform duration-[1.5s] cubic-bezier(0.2, 0, 0, 1) group-hover:scale-110"
+          className={`w-full h-full object-cover transition-transform duration-[1.5s] cubic-bezier(0.2, 0, 0, 1) ${partner.unlocked ? 'group-hover:scale-110' : 'blur-xl select-none pointer-events-none scale-105'}`}
         />
-        <div className="absolute top-5 left-5">
+        {!partner.unlocked && (
+          <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center p-4 text-white text-center">
+            <div className="w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mb-2 border border-white/30">
+              <span className="text-lg">🔒</span>
+            </div>
+            <span className="bg-primary-rose text-white px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-[0.2em] shadow-lg">
+              Unlock to View
+            </span>
+          </div>
+        )}
+        <div className="absolute top-5 left-5 z-10">
            <span className="bg-near-black/60 backdrop-blur-md text-white border border-white/20 px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] shadow-xl">
              {partner.gender}
            </span>

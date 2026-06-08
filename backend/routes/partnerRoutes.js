@@ -4,6 +4,9 @@ const mongoose = require('mongoose');
 const Partner = require('../models/Partner');
 const { protect } = require('../middleware/authMiddleware');
 const upload = require('../middleware/uploadMiddleware');
+const User = require('../models/User');
+const PartnerUnlock = require('../models/PartnerUnlock');
+const jwt = require('jsonwebtoken');
 
 // @desc    Create a new partner profile
 // @route   POST /api/partners
@@ -67,8 +70,49 @@ router.get('/', async (req, res) => {
       ];
     }
 
+    // Check optional authentication
+    let userId = null;
+    let isAdmin = false;
+    let unlockedPartnerIds = new Set();
+
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        userId = decoded.id;
+        if (userId) {
+          const user = await User.findById(userId);
+          if (user) {
+            if (user.role === 'admin') {
+              isAdmin = true;
+            } else {
+              const unlocks = await PartnerUnlock.find({ user: userId, status: 'completed' });
+              unlockedPartnerIds = new Set(unlocks.map(u => u.partner.toString()));
+            }
+          }
+        }
+      } catch (err) {
+        // Ignore invalid token
+      }
+    }
+
     const partners = await Partner.find(query).populate('user', 'name').sort({ createdAt: -1 });
-    res.json(partners);
+
+    const updatedPartners = partners.map(partner => {
+      const isOwner = userId && partner.user && partner.user._id.toString() === userId.toString();
+      const isUnlocked = isAdmin || isOwner || unlockedPartnerIds.has(partner._id.toString());
+      
+      const partnerObj = partner.toObject();
+      if (!isUnlocked) {
+        partnerObj.phone = ''; // hide phone
+      }
+      return {
+        ...partnerObj,
+        unlocked: isUnlocked
+      };
+    });
+
+    res.json(updatedPartners);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -101,11 +145,49 @@ router.get('/:id', async (req, res) => {
       { new: true }
     ).populate('user', 'name email');
 
-    if (partner) {
-      res.json(partner);
-    } else {
-      res.status(404).json({ message: 'Profile not found' });
+    if (!partner) {
+      return res.status(404).json({ message: 'Profile not found' });
     }
+
+    // Check optional authentication
+    let userId = null;
+    let unlocked = false;
+
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      try {
+        const token = req.headers.authorization.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        userId = decoded.id;
+        if (userId) {
+          const user = await User.findById(userId);
+          if (user) {
+            if (user.role === 'admin' || (partner.user && partner.user._id.toString() === userId.toString())) {
+              unlocked = true;
+            } else {
+              const unlock = await PartnerUnlock.findOne({ user: userId, partner: partner._id, status: 'completed' });
+              if (unlock) {
+                unlocked = true;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        // Ignore invalid token
+      }
+    }
+
+    const partnerObj = partner.toObject();
+    if (!unlocked) {
+      partnerObj.phone = ''; // hide phone
+      if (partnerObj.user) {
+        partnerObj.user.email = ''; // hide email
+      }
+    }
+
+    res.json({
+      partner: partnerObj,
+      unlocked
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
