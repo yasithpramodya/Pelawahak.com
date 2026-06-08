@@ -75,8 +75,10 @@ const Pricing = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-16 animate-fadeIn min-h-screen">
-      <div className="text-center mb-16">
-        <h1 className="text-4xl md:text-6xl font-black text-near-black uppercase tracking-tighter mb-4">
+      {paypalClientId && paypalClientId !== 'YOUR_PAYPAL_SANDBOX_CLIENT_ID' ? (
+        <PayPalScriptProvider options={{ "client-id": paypalClientId, currency: "USD", intent: "capture", "enable-funding": "card" }}>
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-6xl font-black text-near-black uppercase tracking-tighter mb-4">
           Professional <span className="text-gold-gradient">Plans</span>
         </h1>
         <p className="text-dark-grey/60 font-semibold text-lg max-w-2xl mx-auto">
@@ -155,17 +157,15 @@ const Pricing = () => {
                   </div>
                 ) : paypalClientId && paypalClientId !== 'YOUR_PAYPAL_SANDBOX_CLIENT_ID' ? (
                   <div className="absolute inset-0 z-10 opacity-90 hover:opacity-100">
-                    <PayPalScriptProvider options={{ "client-id": paypalClientId, currency: "USD", intent: "capture", "enable-funding": "card" }}>
-                      <PayPalButtons
-                        style={{ layout: "horizontal", height: 48, shape: "rect", color: "gold", tagline: false }}
-                        createOrder={() => handleSubscribeOrder(planKey)}
-                        onApprove={(data) => handleSubscribeApprove(planKey, data)}
-                        onError={(err) => {
-                          console.error(`PayPal Error (${planKey})`, err);
-                          setError(`PayPal checkout failed for ${details.name}.`);
-                        }}
-                      />
-                    </PayPalScriptProvider>
+                    <PayPalButtons
+                      style={{ layout: "horizontal", height: 48, shape: "rect", color: "gold", tagline: false }}
+                      createOrder={() => handleSubscribeOrder(planKey)}
+                      onApprove={(data) => handleSubscribeApprove(planKey, data)}
+                      onError={(err) => {
+                        console.error(`PayPal Error (${planKey})`, err);
+                        setError(`PayPal checkout failed for ${details.name}.`);
+                      }}
+                    />
                   </div>
                 ) : (
                   <button disabled className="w-full py-4 rounded-xl text-[10px] font-black uppercase tracking-widest bg-rose-50 text-rose-500">
@@ -193,6 +193,12 @@ const Pricing = () => {
            Buy Ad Slot for $1.20
          </button>
       </div>
+        </PayPalScriptProvider>
+      ) : (
+        <div className="text-center text-rose-500 font-black uppercase mt-10">
+          ⚠️ PayPal Client ID is missing.
+        </div>
+      )}
     </div>
   );
 };
