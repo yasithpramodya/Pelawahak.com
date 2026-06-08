@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import api, { getImageUrl } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
@@ -13,31 +13,33 @@ const PartnerDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [mainImageIndex, setMainImageIndex] = useState(0);
-
   const [showNumber, setShowNumber] = useState(false);
 
-  useEffect(() => {
-    const fetchPartner = async () => {
-      setLoading(true);
-      try {
-        const res = await api.get(`/partners/${id}`);
-        setPartner(res.data.partner);
-        setUnlocked(res.data.unlocked);
-      } catch (err) {
-        console.error('Fetch error:', err);
-        if (err.response?.status === 404) {
-          setError('This profile has been removed or does not exist.');
-        } else if (err.response?.status === 400) {
-          setError('Invalid profile ID format. Please check the link and try again.');
-        } else {
-          setError('Could not connect to the server. Please check your internet and try again.');
-        }
-      } finally {
-        setLoading(false);
+  // Extracted so it can be called both on mount AND after successful payment
+  const fetchPartner = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await api.get(`/partners/${id}`);
+      setPartner(res.data.partner);
+      setUnlocked(res.data.unlocked);
+      setMainImageIndex(0);
+    } catch (err) {
+      console.error('Fetch error:', err);
+      if (err.response?.status === 404) {
+        setError('This profile has been removed or does not exist.');
+      } else if (err.response?.status === 400) {
+        setError('Invalid profile ID format. Please check the link and try again.');
+      } else {
+        setError('Could not connect to the server. Please check your internet and try again.');
       }
-    };
-    if (id) fetchPartner();
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
+
+  useEffect(() => {
+    if (id) fetchPartner();
+  }, [id, fetchPartner]);
 
   if (loading) return (
     <div className="flex flex-col items-center justify-center py-20 min-h-screen">
@@ -187,7 +189,7 @@ const PartnerDetails = () => {
                   {user ? (
                     <PayPalUnlock 
                       partnerId={id} 
-                      onSuccess={() => setUnlocked(true)}
+                      onSuccess={fetchPartner}
                     />
                   ) : (
                     <div className="bg-white/10 backdrop-blur-md p-8 rounded-[2rem] border border-white/20 text-center flex flex-col items-center">
