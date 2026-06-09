@@ -26,6 +26,9 @@ export const AuthProvider = ({ children }) => {
       email: res.data.email,
       role: res.data.role,
       freeAdsRemaining: res.data.freeAdsRemaining,
+      paidAdsRemaining: res.data.paidAdsRemaining,
+      subscriptionPlan: res.data.subscriptionPlan,
+      subscriptionEndsAt: res.data.subscriptionEndsAt,
     };
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
@@ -41,6 +44,9 @@ export const AuthProvider = ({ children }) => {
       email: res.data.email,
       role: res.data.role,
       freeAdsRemaining: res.data.freeAdsRemaining,
+      paidAdsRemaining: res.data.paidAdsRemaining,
+      subscriptionPlan: res.data.subscriptionPlan,
+      subscriptionEndsAt: res.data.subscriptionEndsAt,
     };
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);

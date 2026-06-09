@@ -45,13 +45,10 @@ const Pricing = () => {
 
   const handleSubscribeOrder = async (plan) => {
     setError(null);
-    setLoadingPlan(plan);
     try {
       const res = await api.post(`/payments/subscribe/${plan}`);
-      setLoadingPlan(null);
       return res.data.orderID;
     } catch (err) {
-      setLoadingPlan(null);
       const errMsg = err.response?.data?.message || 'Failed to initialize subscription.';
       setError(errMsg);
       throw new Error(errMsg);

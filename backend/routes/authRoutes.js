@@ -35,7 +35,10 @@ router.post('/register', async (req, res) => {
         email: user.email,
         role: user.role,
         token: generateToken(user._id),
-        freeAdsRemaining: user.freeAdsRemaining
+        freeAdsRemaining: user.freeAdsRemaining,
+        paidAdsRemaining: user.paidAdsRemaining,
+        subscriptionPlan: user.subscriptionPlan,
+        subscriptionEndsAt: user.subscriptionEndsAt
       });
     } else {
       res.status(400).json({ message: 'Invalid user data' });
@@ -61,7 +64,10 @@ router.post('/login', async (req, res) => {
         email: user.email,
         role: user.role,
         token: generateToken(user._id),
-        freeAdsRemaining: user.freeAdsRemaining
+        freeAdsRemaining: user.freeAdsRemaining,
+        paidAdsRemaining: user.paidAdsRemaining,
+        subscriptionPlan: user.subscriptionPlan,
+        subscriptionEndsAt: user.subscriptionEndsAt
       });
     } else {
       res.status(401).json({ message: 'Invalid email or password' });
