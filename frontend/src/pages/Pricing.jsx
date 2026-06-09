@@ -126,7 +126,7 @@ const Pricing = () => {
                 </ul>
               </div>
 
-              <div className="mt-auto h-[50px] relative">
+              <div className="mt-auto min-h-[110px] relative flex flex-col justify-end">
                 {planKey === 'free' ? (
                   <button 
                     disabled 
@@ -153,16 +153,18 @@ const Pricing = () => {
                     <div className="w-4 h-4 border-2 border-primary-rose/30 border-t-primary-rose rounded-full animate-spin"></div>
                   </div>
                 ) : paypalClientId && paypalClientId !== 'YOUR_PAYPAL_SANDBOX_CLIENT_ID' ? (
-                  <div className="absolute inset-0 z-10 opacity-90 hover:opacity-100">
-                    <PayPalButtons
-                      style={{ layout: "horizontal", height: 48, shape: "rect", color: "gold", tagline: false }}
-                      createOrder={() => handleSubscribeOrder(planKey)}
-                      onApprove={(data) => handleSubscribeApprove(planKey, data)}
-                      onError={(err) => {
-                        console.error(`PayPal Error (${planKey})`, err);
-                        setError(`PayPal checkout failed for ${details.name}.`);
-                      }}
-                    />
+                  <div className="absolute inset-0 z-10 opacity-90 hover:opacity-100 flex items-center justify-center pointer-events-auto">
+                    <div className="w-full h-full scale-90 origin-center">
+                      <PayPalButtons
+                        style={{ layout: "vertical", shape: "rect", color: "gold", tagline: false }}
+                        createOrder={() => handleSubscribeOrder(planKey)}
+                        onApprove={(data) => handleSubscribeApprove(planKey, data)}
+                        onError={(err) => {
+                          console.error(`PayPal Error (${planKey})`, err);
+                          setError(`PayPal checkout failed for ${details.name}.`);
+                        }}
+                      />
+                    </div>
                   </div>
                 ) : (
                   <button disabled className="w-full py-4 rounded-xl text-[10px] font-black uppercase tracking-widest bg-rose-50 text-rose-500">
