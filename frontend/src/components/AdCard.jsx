@@ -29,7 +29,7 @@ const AdCard = ({ ad }) => {
         <img 
           src={imageUrl} 
           alt={ad.title} 
-          className="w-full h-full object-cover transition-transform duration-[1.5s] cubic-bezier(0.2, 0, 0, 1) group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.2,0,0,1)] group-hover:scale-110"
         />
         <div className="absolute top-5 left-5">
            <span className="bg-primary-rose text-white px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.2em] shadow-xl shadow-primary-rose/30">

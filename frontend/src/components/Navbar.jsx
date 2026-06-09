@@ -127,7 +127,7 @@ const Navbar = () => {
       </nav>
 
       {/* Mobile Menu Drawer */}
-      <div className={`fixed inset-0 bg-warm-white/95 backdrop-blur-2xl z-[1500] flex flex-col transition-all duration-700 cubic-bezier(0.2, 0, 0, 1) md:hidden ${
+      <div className={`fixed inset-0 bg-warm-white/95 backdrop-blur-2xl z-[1500] flex flex-col transition-all duration-700 ease-[cubic-bezier(0.2,0,0,1)] md:hidden ${
         isMenuOpen ? 'translate-y-0 opacity-100' : '-translate-y-full opacity-0 pointer-events-none'
       }`}>
          <div className="flex flex-col p-12 pt-36 space-y-12 h-full overflow-y-auto">

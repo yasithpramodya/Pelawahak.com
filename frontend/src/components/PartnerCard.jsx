@@ -14,7 +14,7 @@ const PartnerCard = ({ partner }) => {
         <img 
           src={imageUrl} 
           alt={partner.title} 
-          className={`w-full h-full object-cover transition-transform duration-[1.5s] cubic-bezier(0.2, 0, 0, 1) ${partner.unlocked ? 'group-hover:scale-110' : 'blur-xl select-none pointer-events-none scale-105'}`}
+          className={`w-full h-full object-cover transition-transform duration-[1.5s] ease-[cubic-bezier(0.2,0,0,1)] ${partner.unlocked ? 'group-hover:scale-110' : 'blur-xl select-none pointer-events-none scale-105'}`}
         />
         {!partner.unlocked && (
           <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center p-4 text-white text-center">
