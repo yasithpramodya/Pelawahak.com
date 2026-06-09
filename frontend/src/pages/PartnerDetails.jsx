@@ -254,11 +254,10 @@ const PartnerDetails = () => {
         </div>
       </div>
       
-      {/* Footer Navigation */}
       <div className="mt-12 flex justify-center">
         <button 
           onClick={() => navigate(-1)} 
-          className="bg-white hover:bg-gray-50 text-gray-400 px-10 py-4 rounded-3xl font-black uppercase text-[10px] tracking-[0.3em] transition-all border border-gray-100 shadow-sm"
+          className="bg-white hover:bg-warm-white text-dark-grey/50 px-10 py-4 rounded-3xl font-black uppercase text-[10px] tracking-[0.3em] transition-all border border-light-grey/30 shadow-sm hover:shadow-md hover:-translate-y-1"
         >
           ← Return to Matchmaking
         </button>
