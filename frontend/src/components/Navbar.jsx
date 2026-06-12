@@ -6,6 +6,7 @@ const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const isHomePage = location.pathname === '/';
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -70,8 +71,8 @@ const Navbar = () => {
     <>
       <nav
         className={`fixed top-0 left-0 right-0 z-[2000] transition-all duration-500 ${
-          isScrolled
-            ? 'h-16 bg-white/90 backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.06)] border-b border-white/60'
+          isScrolled || !isHomePage
+            ? 'h-16 bg-white/95 backdrop-blur-md shadow-[0_4px_24px_rgba(0,0,0,0.06)] border-b border-white/60'
             : 'h-20 bg-white/30 backdrop-blur-sm border-b border-white/10'
         }`}
       >

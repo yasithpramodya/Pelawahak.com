@@ -140,6 +140,11 @@ body {
   width: 100% !important;
 }
 
+/* Ensure the PayPal overlay is always on top of other page content (like z-10 elements and headers) */
+.paypal-overlay-context {
+  z-index: 99999 !important;
+}
+
 /* On very small screens, clamp the PayPal card-field overlay to the viewport */
 @media (max-width: 480px) {
   .paypal-overlay-context {
