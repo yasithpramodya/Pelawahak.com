@@ -65,6 +65,9 @@ const AdDetails = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-14 animate-fadeIn">
+      <title>{`${ad.title} | ${ad.category} in ${ad.district} | Pelawahak.com`}</title>
+      <meta name="description" content={`Premium wedding service: ${ad.title} (${ad.category}) in ${ad.city}, ${ad.district}. Price: Rs. ${ad.price ? ad.price.toLocaleString() : 'Negotiable'}. ${ad.description ? ad.description.slice(0, 120) : ''}`} />
+      <link rel="canonical" href={`https://pelawahak.com/ad/${ad._id}`} />
 
       {/* Back Button */}
       <button

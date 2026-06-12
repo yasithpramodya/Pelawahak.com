@@ -78,6 +78,8 @@ const AdminPanel = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-16 animate-fadeIn">
+      <title>Moderation Panel | Pelawahak.com</title>
+      <meta name="robots" content="noindex, nofollow" />
       <div className="flex flex-col md:flex-row justify-between md:items-end mb-10 md:mb-16 gap-6 md:gap-8">
         <div>
           <h2 className="text-4xl md:text-6xl font-black text-near-black uppercase tracking-tighter leading-none mb-4">Moderation <span className="text-primary-rose">Vault</span></h2>

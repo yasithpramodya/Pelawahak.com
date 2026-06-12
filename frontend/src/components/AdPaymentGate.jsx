@@ -11,6 +11,7 @@ const AdPaymentGate = ({ onSuccess }) => {
   const [loading, setLoading] = useState(false);
 
   const paypalClientId = import.meta.env.VITE_PAYPAL_CLIENT_ID;
+  const hasPayPal = paypalClientId && paypalClientId !== 'YOUR_PAYPAL_SANDBOX_CLIENT_ID';
 
   const handleBuyAdOrder = async () => {
     setError(null);
@@ -43,12 +44,12 @@ const AdPaymentGate = ({ onSuccess }) => {
   };
 
   return (
-    <div className="w-full bg-warm-white/40 p-8 rounded-[2rem] border border-light-grey/10 shadow-inner flex flex-col items-center">
-      <div className="text-center mb-8">
+    <div className="w-full bg-warm-white/40 p-6 md:p-8 rounded-[2rem] border border-light-grey/10 shadow-inner flex flex-col items-center">
+      <div className="text-center mb-6 md:mb-8">
         <span className="text-4xl mb-4 block">📢</span>
-        <h4 className="font-black text-near-black uppercase text-xl tracking-widest mb-2">Ad Limit Reached</h4>
-        <p className="text-dark-grey/60 font-semibold text-sm leading-normal max-w-md mx-auto">
-          You've used all your free ads. You can purchase a single ad slot to post right now, or upgrade your plan to unlock more features and a monthly ad quota.
+        <h4 className="font-black text-near-black uppercase text-lg md:text-xl tracking-widest mb-2">Ad Limit Reached</h4>
+        <p className="text-dark-grey/60 font-semibold text-sm leading-relaxed max-w-md mx-auto">
+          You've used all your free ads. Purchase a single ad slot to post right now, or upgrade your plan for a monthly quota.
         </p>
       </div>
 
@@ -64,15 +65,16 @@ const AdPaymentGate = ({ onSuccess }) => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 w-full max-w-4xl">
         {/* Single Ad Slot */}
-        <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-light-grey/10 flex flex-col items-center text-center hover:scale-105 transition-transform duration-300">
+        <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-xl border border-light-grey/10 flex flex-col items-center text-center">
           <h3 className="font-black text-near-black uppercase tracking-widest text-lg mb-2">Single Ad Slot</h3>
-          <p className="text-primary-rose font-black text-3xl mb-4">$1.20</p>
-          <p className="text-dark-grey/50 text-xs font-bold uppercase tracking-wide mb-8">Post one additional ad immediately.</p>
-          
+          <p className="text-primary-rose font-black text-3xl mb-2">$1.20</p>
+          <p className="text-dark-grey/50 text-xs font-bold uppercase tracking-wide mb-6">Post one additional ad immediately.</p>
+
           <div className="w-full mt-auto">
-            {paypalClientId && paypalClientId !== 'YOUR_PAYPAL_SANDBOX_CLIENT_ID' ? (
+            {hasPayPal ? (
+              /* PayPalScriptProvider wraps PayPalButtons — no absolute/overlay wrappers */
               <PayPalScriptProvider options={{ "client-id": paypalClientId, currency: "USD", intent: "capture", "enable-funding": "card" }}>
                 <PayPalButtons
                   style={{ layout: "vertical", height: 48, shape: "rect", color: "gold" }}
@@ -91,15 +93,14 @@ const AdPaymentGate = ({ onSuccess }) => {
         </div>
 
         {/* Upgrade Plan */}
-        <div className="bg-earth-gradient p-8 rounded-[2rem] shadow-xl text-wedding-cream flex flex-col items-center text-center hover:scale-105 transition-transform duration-300 relative overflow-hidden group">
-          <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:rotate-12 transition-transform duration-500">
-             <span className="text-6xl font-black text-primary-rose">⭐</span>
+        <div className="bg-earth-gradient p-6 md:p-8 rounded-[2rem] shadow-xl text-wedding-cream flex flex-col items-center text-center relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:rotate-12 transition-transform duration-500 pointer-events-none">
+            <span className="text-6xl font-black text-primary-rose">⭐</span>
           </div>
           <h3 className="font-black uppercase tracking-widest text-lg mb-2 relative z-10">Monthly Plans</h3>
-          <p className="text-white font-black text-3xl mb-4 relative z-10">From $2.99</p>
-          <p className="text-wedding-cream/70 text-xs font-bold uppercase tracking-wide mb-8 relative z-10">Get a monthly quota of ads and premium placement.</p>
-          
-          <button 
+          <p className="text-white font-black text-3xl mb-2 relative z-10">From $2.99</p>
+          <p className="text-wedding-cream/70 text-xs font-bold uppercase tracking-wide mb-6 relative z-10">Get a monthly quota of ads and premium placement.</p>
+          <button
             onClick={() => navigate('/pricing')}
             className="w-full mt-auto bg-white text-near-black hover:bg-primary-rose hover:text-white transition-colors duration-300 font-black uppercase tracking-[0.2em] py-4 rounded-xl shadow-lg relative z-10"
           >

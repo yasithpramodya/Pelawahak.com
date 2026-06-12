@@ -28,6 +28,8 @@ const Dashboard = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-12 space-y-12 md:space-y-16">
+      <title>Member Dashboard | Pelawahak.com</title>
+      <meta name="robots" content="noindex, nofollow" />
       <div className="flex flex-col md:flex-row justify-between md:items-end mb-4 gap-6">
         <div>
           <h2 className="text-3xl md:text-5xl font-black text-near-black uppercase tracking-tighter leading-none mb-3">Management <span className="text-primary-rose">Hub</span></h2>

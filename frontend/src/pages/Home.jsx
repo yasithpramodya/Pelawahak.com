@@ -79,8 +79,10 @@ const Home = () => {
 
   return (
     <div className="space-y-32 pb-32">
+      <title>Pelawahak.com | Premium Matrimony & Wedding Marketplace Sri Lanka</title>
+      <meta name="description" content="Sri Lanka's most exclusive marketplace for elite wedding vendors and matrimonial matchmaking. Discover premium services and find your soulmate." />
       {/* HERO SECTION */}
-      <main className="relative h-[90vh] md:h-screen flex items-center overflow-hidden">
+      <main className="relative h-[85vh] md:h-screen flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img 
             src="/hero-blush.png" 
@@ -93,18 +95,18 @@ const Home = () => {
         
         {/* Hero Content */}
         <div className="container mx-auto px-6 relative z-10 max-w-7xl">
-          <div className="w-full md:w-3/5">
+          <div className="w-full md:w-3/5 pt-20 md:pt-0">
             <div className="inline-flex items-center gap-2 bg-primary-rose/10 px-4 py-2 rounded-full mb-8 animate-reveal" style={{ animationDelay: '0.2s' }}>
                <span className="w-2 h-2 bg-primary-rose rounded-full animate-pulse"></span>
                <span className="text-[10px] font-black text-primary-rose uppercase tracking-[0.3em]">The Premium Registry</span>
             </div>
             
-            <h1 className="text-6xl md:text-8xl font-serif font-black tracking-tighter leading-[0.95] mb-8 text-near-black animate-reveal" style={{ animationDelay: '0.4s' }}>
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-serif font-black tracking-tighter leading-[0.95] mb-6 md:mb-8 text-near-black animate-reveal" style={{ animationDelay: '0.4s' }}>
               Crafting <span className="text-primary-rose italic">Eternal</span> <br />
               <span className="text-gold-gradient">Moments</span>
             </h1>
             
-            <p className="text-lg md:text-xl text-dark-grey/70 font-medium mb-12 max-w-xl leading-relaxed animate-reveal" style={{ animationDelay: '0.6s' }}>
+            <p className="text-base md:text-xl text-dark-grey/70 font-medium mb-8 md:mb-12 max-w-xl leading-relaxed animate-reveal" style={{ animationDelay: '0.6s' }}>
               Sri Lanka's most exclusive marketplace for elite wedding vendors and matrimonial matchmaking.
             </p>
             
@@ -126,9 +128,9 @@ const Home = () => {
       </main>
 
       {/* FILTER SEARCH BAR & CATEGORIES */}
-      <div id="search-section" ref={addToScrollRefs} className="max-w-7xl mx-auto px-4 -mt-24 relative z-30 reveal">
+      <div id="search-section" ref={addToScrollRefs} className="max-w-7xl mx-auto px-4 -mt-8 md:-mt-24 relative z-30 reveal">
         <div className="glass-light p-4 rounded-[3rem] shadow-2xl">
-          <form onSubmit={handleFilter} className="flex flex-col md:flex-row items-center gap-4">
+          <form onSubmit={handleFilter} className="flex flex-col md:flex-row items-stretch md:items-center gap-3 md:gap-4">
             <div className="w-full md:w-1/3 px-8 py-4 bg-white/50 rounded-[2rem] border border-white/60">
               <label className="block text-[8px] font-black text-dark-grey/40 uppercase tracking-[0.3em] mb-1">Select Category</label>
               <select 
@@ -158,15 +160,15 @@ const Home = () => {
               />
             </div>
             
-            <button type="submit" className="w-full md:w-48 bg-primary-rose text-white px-8 py-6 rounded-[2rem] font-black text-[11px] tracking-[0.2em] uppercase hover:bg-deep-rose transition-all shadow-xl shadow-primary-rose/20 active:scale-95">
+            <button type="submit" className="w-full md:w-48 bg-primary-rose text-white px-8 py-4 md:py-6 rounded-[2rem] font-black text-[11px] tracking-[0.2em] uppercase hover:bg-deep-rose transition-all shadow-xl shadow-primary-rose/20 active:scale-95">
               Refine Results
             </button>
           </form>
         </div>
 
         {/* Categories Quick Filter */}
-        <div className="mt-12 flex justify-center">
-           <div className="inline-flex gap-8 px-10 py-6 glass-light rounded-full overflow-x-auto hide-scrollbar max-w-full">
+        <div className="mt-8 md:mt-12 flex justify-center">
+           <div className="flex gap-5 md:gap-8 px-6 md:px-10 py-4 md:py-6 glass-light rounded-full overflow-x-auto hide-scrollbar max-w-full">
               {[
                 { name: 'Photography', icon: '📸' },
                 { name: 'Wedding Halls', icon: '🏛️' },

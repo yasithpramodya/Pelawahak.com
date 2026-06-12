@@ -73,6 +73,9 @@ const PartnerDetails = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-12 animate-fadeIn">
+      <title>{`${partner.title} (${partner.age} Yrs, ${partner.profession}) | Matrimonial Profile | Pelawahak.com`}</title>
+      <meta name="description" content={`Verified matrimonial profile of a ${partner.age}-year-old ${partner.gender} (${partner.profession}) from ${partner.district}, Sri Lanka. ${partner.description ? partner.description.slice(0, 120) : ''}`} />
+      <link rel="canonical" href={`https://pelawahak.com/partner/${partner._id}`} />
       <div className="bg-white rounded-[2rem] md:rounded-[4rem] shadow-2xl overflow-hidden border border-light-grey/10">
         <div className="flex flex-col lg:flex-row">
 

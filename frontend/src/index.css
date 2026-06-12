@@ -123,3 +123,28 @@ body {
   }
 }
 
+/* ─── PayPal inline-form containment ───────────────────────────────────────
+   Prevents PayPal's card-fields iframe from overflowing its parent card
+   and overlapping other page elements on small screens.
+   ─────────────────────────────────────────────────────────────────────── */
+[data-paypal-card-fields-container],
+.paypal-buttons-container {
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Ensure every ancestor of a PayPalButtons component that we control
+   allows the iframe to expand downward in normal document flow. */
+.paypal-button-container {
+  position: relative !important;
+  width: 100% !important;
+}
+
+/* On very small screens, clamp the PayPal card-field overlay to the viewport */
+@media (max-width: 480px) {
+  .paypal-overlay-context {
+    max-height: 100svh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

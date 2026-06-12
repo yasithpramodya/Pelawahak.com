@@ -175,6 +175,8 @@ const PostAd = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 md:py-16 animate-fadeIn">
+      <title>Publish Wedding Service Ad | Pelawahak.com</title>
+      <meta name="robots" content="noindex, nofollow" />
       <div className="mb-10 md:mb-14">
         <h2 className="text-3xl md:text-5xl font-black text-near-black uppercase tracking-tighter leading-none mb-4">Ad <span className="text-primary-rose">Registry</span></h2>
         <p className="text-dark-grey/70 font-black uppercase tracking-widest text-[10px] italic">Showcase your professional wedding services</p>

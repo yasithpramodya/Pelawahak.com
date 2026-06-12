@@ -26,6 +26,9 @@ const Login = () => {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-20 bg-surface-gradient">
+      <title>Login | Pelawahak.com</title>
+      <meta name="description" content="Sign in to your Pelawahak.com account to explore premium wedding services and matrimonial profiles." />
+      <meta name="robots" content="noindex, nofollow" />
       <div className="max-w-md w-full bg-white p-12 rounded-[3rem] shadow-2xl border border-light-grey/10 relative overflow-hidden group">
         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:rotate-12 transition-transform duration-1000">
            <span className="text-8xl font-black text-primary-rose">✦</span>

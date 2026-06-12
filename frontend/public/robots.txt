@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Allow: /partner
+Allow: /pricing
+Allow: /partner/*
+Allow: /ad/*
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /chat
+Disallow: /post-ad
+Disallow: /post-partner
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://pelawahak.com/sitemap.xml

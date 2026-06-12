@@ -49,7 +49,7 @@ function App() {
       <AuthProvider>
         <div className="min-h-screen bg-warm-white/30 text-near-black font-sans selection:bg-deep-rose/30">
           <Navbar />
-          <main>
+          <main className="pt-16 md:pt-20">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />

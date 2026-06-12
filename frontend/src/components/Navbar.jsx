@@ -75,7 +75,7 @@ const Navbar = () => {
             : 'h-20 bg-white/30 backdrop-blur-sm border-b border-white/10'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 h-full">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 h-full">
           <div className="flex justify-between items-center h-full gap-8">
 
             {/* Logo */}

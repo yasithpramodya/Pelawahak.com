@@ -100,7 +100,9 @@ const Chat = () => {
   }, [messages]);
 
   return (
-    <div className="max-w-7xl mx-auto h-[85vh] bg-white rounded-[4rem] shadow-2xl overflow-hidden border border-light-grey/10 flex relative">
+    <div className="max-w-7xl mx-auto h-[calc(100svh-4rem)] md:h-[85vh] bg-white rounded-[2rem] md:rounded-[4rem] shadow-2xl overflow-hidden border border-light-grey/10 flex relative">
+      <title>Private Chat | Pelawahak.com</title>
+      <meta name="robots" content="noindex, nofollow" />
       
       {/* Sidebar: Conversations */}
       <div className={`w-full md:w-1/3 border-r border-light-grey/10 flex flex-col bg-warm-white/30 ${selectedPartner ? 'hidden md:flex' : 'flex'}`}>

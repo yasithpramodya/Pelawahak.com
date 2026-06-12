@@ -27,6 +27,9 @@ const Register = () => {
 
   return (
     <div className="min-h-[90vh] flex items-center justify-center px-4 py-20 bg-surface-gradient">
+      <title>Register | Pelawahak.com</title>
+      <meta name="description" content="Register an account on Pelawahak.com to join Sri Lanka's premium matrimonial matchmaking circle and wedding vendor marketplace." />
+      <meta name="robots" content="noindex, nofollow" />
       <div className="max-w-md w-full bg-white p-12 rounded-[3.5rem] shadow-2xl border border-light-grey/10 relative overflow-hidden group">
         <div className="absolute top-0 left-0 p-8 opacity-5 group-hover:-rotate-12 transition-transform duration-1000">
            <span className="text-8xl font-black text-primary-rose">💍</span>

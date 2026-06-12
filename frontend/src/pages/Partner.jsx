@@ -44,9 +44,11 @@ const Partner = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 md:py-16 animate-fadeIn">
+      <title>Matrimonial Profiles & Marriage Proposals | Pelawahak.com</title>
+      <meta name="description" content="Browse verified brides and grooms matrimonial profiles in Sri Lanka. Refine your specifications to discover your ideal match." />
       <div className="flex flex-col md:flex-row justify-between md:items-end mb-10 md:mb-16 gap-6 md:gap-8">
         <div>
-          <h2 className="text-4xl md:text-6xl font-black text-near-black uppercase tracking-tighter leading-none mb-4">Partner <span className="text-gold-gradient">Archive</span></h2>
+          <h1 className="text-4xl md:text-6xl font-black text-near-black uppercase tracking-tighter leading-none mb-4">Partner <span className="text-gold-gradient">Archive</span></h1>
           <p className="text-dark-grey/70 font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-[10px] italic">Refine your aspirations to discover the ideal union</p>
         </div>
         <div className="flex bg-warm-white p-1.5 md:p-2 rounded-[1.5rem] md:rounded-[2rem] border border-light-grey/10 shadow-sm w-fit">
