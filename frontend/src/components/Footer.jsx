@@ -29,9 +29,20 @@ const Footer = () => {
               Sri Lanka's premier wedding marketplace and matrimonial hub. Designed with elegance to help you create unforgettable moments.
             </p>
             <div className="flex gap-4">
-              {['FB', 'IG', 'TW', 'YT'].map((social) => (
-                <a key={social} href="#" className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-[11px] font-black hover:bg-gold-gradient hover:text-near-black transition-all border border-white/10 group">
-                  <span className="group-hover:scale-110 transition-transform">{social}</span>
+              {[
+                { name: 'FB', url: 'https://facebook.com/pelawahak' },
+                { name: 'IG', url: 'https://instagram.com/pelawahak' },
+                { name: 'TW', url: 'https://twitter.com/pelawahak' },
+                { name: 'YT', url: 'https://youtube.com/pelawahak' }
+              ].map((social) => (
+                <a 
+                  key={social.name} 
+                  href={social.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-[11px] font-black hover:bg-gold-gradient hover:text-near-black transition-all border border-white/10 group"
+                >
+                  <span className="group-hover:scale-110 transition-transform">{social.name}</span>
                 </a>
               ))}
             </div>
@@ -52,10 +63,10 @@ const Footer = () => {
           <div>
             <h3 className="text-[10px] font-black text-primary-rose uppercase tracking-[0.3em] mb-10">Support & Trust</h3>
             <ul className="space-y-5">
-              <li><a href="#" className="text-sm font-bold text-wedding-cream/80 hover:text-white transition-colors">Safety Tips</a></li>
-              <li><a href="#" className="text-sm font-bold text-wedding-cream/80 hover:text-white transition-colors">Terms of Service</a></li>
-              <li><a href="#" className="text-sm font-bold text-wedding-cream/80 hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="text-sm font-bold text-wedding-cream/80 hover:text-white transition-colors">Help Center</a></li>
+              <li><Link to="/safety" className="text-sm font-bold text-wedding-cream/80 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1 h-1 bg-deep-rose rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> Safety Tips</Link></li>
+              <li><Link to="/terms" className="text-sm font-bold text-wedding-cream/80 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1 h-1 bg-deep-rose rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> Terms of Service</Link></li>
+              <li><Link to="/privacy" className="text-sm font-bold text-wedding-cream/80 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1 h-1 bg-deep-rose rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> Privacy Policy</Link></li>
+              <li><Link to="/help" className="text-sm font-bold text-wedding-cream/80 hover:text-white transition-colors flex items-center gap-2 group"><span className="w-1 h-1 bg-deep-rose rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> Help Center</Link></li>
             </ul>
           </div>
  
@@ -65,11 +76,23 @@ const Footer = () => {
             <div className="space-y-8">
               <div className="flex items-center gap-5">
                 <div className="w-12 h-12 rounded-2xl bg-glass flex items-center justify-center text-2xl shadow-inner border border-white/5">📍</div>
-                <p className="text-sm font-bold text-wedding-cream/90 uppercase tracking-tight">Colombo, Sri Lanka</p>
+                <a 
+                  href="https://maps.google.com/?q=Colombo,+Sri+Lanka" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-sm font-bold text-wedding-cream/90 hover:text-white transition-colors uppercase tracking-tight"
+                >
+                  Colombo, Sri Lanka
+                </a>
               </div>
               <div className="flex items-center gap-5">
                 <div className="w-12 h-12 rounded-2xl bg-glass flex items-center justify-center text-2xl shadow-inner border border-white/5">📧</div>
-                <p className="text-sm font-bold text-wedding-cream/90 underline underline-offset-8 decoration-primary-rose/30">info@pelawahak.com</p>
+                <a 
+                  href="mailto:info@pelawahak.com" 
+                  className="text-sm font-bold text-wedding-cream/90 hover:text-white underline underline-offset-8 decoration-primary-rose/30 transition-colors"
+                >
+                  info@pelawahak.com
+                </a>
               </div>
             </div>
           </div>

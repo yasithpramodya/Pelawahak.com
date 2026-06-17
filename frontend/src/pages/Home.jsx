@@ -6,6 +6,25 @@ import { locations } from '../data/locations';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
+const CATEGORIES = [
+  { name: 'Photography', icon: '📸' },
+  { name: 'Catering', icon: '🍽️' },
+  { name: 'Decoration', icon: '🌸' },
+  { name: 'Bridal Dressing', icon: '💄' },
+  { name: 'Salons', icon: '💇' },
+  { name: 'Music and DJ', icon: '🎵' },
+  { name: 'Rent a Car', icon: '🚗' },
+  { name: 'Banquet Halls', icon: '🏛️' },
+  { name: 'Jewelry', icon: '💎' },
+  { name: 'Wedding Clothing', icon: '👗' },
+  { name: 'Entertainment', icon: '🎭' },
+  { name: 'Ashtaka', icon: '🕉️' },
+  { name: 'Wedding Cake', icon: '🎂' },
+  { name: 'Wedding Planning', icon: '📅' },
+  { name: 'Honeymoon', icon: '✈️' },
+  { name: 'Others', icon: '✨' }
+];
+
 const Home = () => {
   const { user } = useContext(AuthContext);
   const [ads, setAds] = useState([]);
@@ -18,11 +37,11 @@ const Home = () => {
 
   const scrollRef = useRef([]);
 
-  const fetchAds = async () => {
+  const fetchAds = async (overrideParams = {}) => {
     setLoading(true);
     try {
       const res = await api.get('/ads', {
-        params: { category, district, search }
+        params: { category, district, search, ...overrideParams }
       });
       setAds(res.data);
     } catch (error) {
@@ -143,13 +162,9 @@ const Home = () => {
                 className="w-full bg-transparent border-none text-near-black text-sm font-black focus:ring-0 cursor-pointer outline-none uppercase tracking-widest"
               >
                 <option value="">All Services</option>
-                <option value="Photography">Photography</option>
-                <option value="Wedding Halls">Wedding Halls</option>
-                <option value="Bridal Dressing">Bridal Dressing</option>
-                <option value="Catering">Catering</option>
-                <option value="Music & Ent.">Entertainment</option>
-                <option value="Transport">Transport</option>
-                <option value="Wedding Planning">Planning</option>
+                {CATEGORIES.map(cat => (
+                  <option key={cat.name} value={cat.name}>{cat.name}</option>
+                ))}
               </select>
             </div>
             
@@ -173,24 +188,24 @@ const Home = () => {
         {/* Categories Quick Filter */}
         <div className="mt-8 md:mt-12 flex justify-center">
            <div className="flex gap-5 md:gap-8 px-6 md:px-10 py-4 md:py-6 glass-light rounded-full overflow-x-auto hide-scrollbar max-w-full">
-              {[
-                { name: 'Photography', icon: '📸' },
-                { name: 'Wedding Halls', icon: '🏛️' },
-                { name: 'Bridal Dressing', icon: '💄' },
-                { name: 'Catering', icon: '🍽️' },
-                { name: 'Transport', icon: '🚗' },
-                { name: 'More', icon: '✨' }
-              ].map((cat) => (
-                <button 
-                  key={cat.name} 
-                  type="button" 
-                  onClick={() => { setCategory(cat.name === 'More' ? '' : cat.name); fetchAds(); }} 
-                  className={`flex flex-col items-center gap-2 group transition-all duration-500 ${category === cat.name ? 'scale-110' : 'opacity-60 hover:opacity-100 hover:-translate-y-1'}`}
-                >
-                  <span className="text-xl group-hover:drop-shadow-lg transition-all">{cat.icon}</span>
-                  <span className={`text-[9px] font-black uppercase tracking-widest ${category === cat.name ? 'text-primary-rose' : 'text-dark-grey'}`}>{cat.name}</span>
-                </button>
-              ))}
+              {CATEGORIES.map((cat) => {
+                const isActive = category === cat.name;
+                return (
+                  <button 
+                    key={cat.name} 
+                    type="button" 
+                    onClick={() => {
+                      const newCat = isActive ? '' : cat.name;
+                      setCategory(newCat);
+                      fetchAds({ category: newCat });
+                    }} 
+                    className={`flex flex-col items-center gap-2 group transition-all duration-500 flex-shrink-0 ${isActive ? 'scale-110' : 'opacity-60 hover:opacity-100 hover:-translate-y-1'}`}
+                  >
+                    <span className="text-xl group-hover:drop-shadow-lg transition-all">{cat.icon}</span>
+                    <span className={`text-[9px] font-black uppercase tracking-widest ${isActive ? 'text-primary-rose' : 'text-dark-grey'}`}>{cat.name}</span>
+                  </button>
+                );
+              })}
            </div>
         </div>
       </div>
