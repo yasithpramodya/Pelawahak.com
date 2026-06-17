@@ -39,11 +39,18 @@ const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
   .split(',')
   .map(url => url.trim());
 
+// Hardcoded safe fallback origins
+const trustedOrigins = [
+  ...allowedOrigins,
+  'https://pelawahak-com.web.app',
+  'https://pelawahak-com.firebaseapp.com'
+];
+
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (Postman, mobile apps, curl, server-to-server)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) {
+    if (trustedOrigins.includes(origin)) {
       return callback(null, true);
     }
     return callback(new Error('Not allowed by CORS'));
@@ -136,7 +143,7 @@ mongoose
     const httpServer = createServer(app);
     const io = new Server(httpServer, {
       cors: {
-        origin: allowedOrigins,
+        origin: trustedOrigins,
         methods: ["GET", "POST"],
         credentials: true,
       }
