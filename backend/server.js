@@ -19,12 +19,26 @@ const paymentRoutes = require('./routes/paymentRoutes');
 
 dotenv.config();
 
-// Fail-fast environment check
-const requiredEnvVars = ['MONGO_URI', 'JWT_SECRET', 'CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET'];
-const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
-if (missingEnvVars.length > 0) {
-  console.error(`❌ FATAL: Missing required environment variables: ${missingEnvVars.join(', ')}`);
+// Fail-fast: only vars that will prevent the server from functioning at all
+const criticalEnvVars = ['MONGO_URI', 'JWT_SECRET'];
+const missingCritical = criticalEnvVars.filter(v => !process.env[v]);
+if (missingCritical.length > 0) {
+  console.error(`❌ FATAL: Missing required environment variables: ${missingCritical.join(', ')}`);
   process.exit(1);
+}
+
+// Soft-warn: optional services degrade gracefully when absent
+const optionalEnvVars = [
+  ['CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET'],
+  ['PAYPAL_CLIENT_ID', 'PAYPAL_CLIENT_SECRET'],
+];
+for (const group of optionalEnvVars) {
+  const missing = group.filter(v => !process.env[v]);
+  if (missing.length > 0 && missing.length < group.length) {
+    console.warn(`⚠️  Incomplete config — some vars in [${group.join(', ')}] are missing. Feature may not work.`);
+  } else if (missing.length === group.length) {
+    console.warn(`⚠️  [${group[0].split('_')[0]}] credentials not set — feature disabled (graceful fallback active).`);
+  }
 }
 
 const app = express();
