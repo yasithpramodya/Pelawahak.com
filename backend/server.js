@@ -43,7 +43,9 @@ const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
 const trustedOrigins = [
   ...allowedOrigins,
   'https://pelawahak-com.web.app',
-  'https://pelawahak-com.firebaseapp.com'
+  'https://pelawahak-com.firebaseapp.com',
+  'https://pelawahak.com',
+  'https://www.pelawahak.com'
 ];
 
 app.use(cors({
