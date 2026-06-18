@@ -25,7 +25,7 @@ const ImageUpload = ({ onUploadSuccess, currentImage }) => {
       const data = await uploadImage(file);
       onUploadSuccess(data.url, data.public_id);
       setLoading(false);
-    } catch (err) {
+    } catch (_err) {
       setError('Upload failed. Please try again.');
       setLoading(false);
     }

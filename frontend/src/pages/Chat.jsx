@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, useCallback } from 'react';
 import { io } from 'socket.io-client';
 import { AuthContext } from '../context/AuthContext';
 import api, { BASE_URL } from '../services/api';
@@ -13,50 +13,19 @@ const Chat = () => {
   const [selectedPartner, setSelectedPartner] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const [socket, setSocket] = useState(null);
   
   const messagesEndRef = useRef(null);
 
-  // Initialize Socket
-  useEffect(() => {
-    if (user) {
-      const socketHost = import.meta.env.VITE_SOCKET_URL || BASE_URL;
-      const newSocket = io(socketHost, {
-        auth: {
-          token: localStorage.getItem('token')
-        }
-      });
-      setSocket(newSocket);
-      
-      newSocket.on('receiveMessage', (message) => {
-        const senderId = message.sender._id || message.sender;
-        if (selectedPartner && senderId.toString() === selectedPartner._id.toString()) {
-          setMessages(prev => [...prev, message]);
-        }
-        fetchConversations();
-      });
-
-      return () => newSocket.close();
-    }
-  }, [user, selectedPartner]);
-
-  useEffect(() => {
-    fetchConversations();
-    if (receiverId) {
-       handleSelectByReceiverId(receiverId);
-    }
-  }, [receiverId]);
-
-  const fetchConversations = async () => {
+  const fetchConversations = useCallback(async () => {
     try {
       const res = await api.get('/messages/conversations');
       setConversations(res.data);
     } catch (err) {
       console.error('Error fetching conversations', err);
     }
-  };
+  }, []);
 
-  const handleSelectByReceiverId = async (id) => {
+  const handleSelectByReceiverId = useCallback(async (id) => {
     try {
       const res = await api.get(`/messages/${id}`);
       setSelectedPartner(res.data.partner);
@@ -65,7 +34,7 @@ const Chat = () => {
     } catch (err) {
       console.error('Error starting conversation', err);
     }
-  };
+  }, [fetchConversations]);
 
   const selectConversation = async (partner) => {
     setSelectedPartner(partner);
@@ -94,6 +63,35 @@ const Chat = () => {
       console.error('Error sending message', err);
     }
   };
+
+  // Initialize Socket
+  useEffect(() => {
+    if (user) {
+      const socketHost = import.meta.env.VITE_SOCKET_URL || BASE_URL;
+      const newSocket = io(socketHost, {
+        auth: {
+          token: localStorage.getItem('token')
+        }
+      });
+      
+      newSocket.on('receiveMessage', (message) => {
+        const senderId = message.sender._id || message.sender;
+        if (selectedPartner && senderId.toString() === selectedPartner._id.toString()) {
+          setMessages(prev => [...prev, message]);
+        }
+        fetchConversations();
+      });
+
+      return () => newSocket.close();
+    }
+  }, [user, selectedPartner, fetchConversations]);
+
+  useEffect(() => {
+    fetchConversations();
+    if (receiverId) {
+       handleSelectByReceiverId(receiverId);
+    }
+  }, [receiverId, fetchConversations, handleSelectByReceiverId]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

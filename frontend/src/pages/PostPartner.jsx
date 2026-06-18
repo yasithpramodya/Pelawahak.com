@@ -6,7 +6,7 @@ import { locations } from '../data/locations';
 import { uploadImage } from '../api/uploadApi';
 
 const PostPartner = () => {
-  const { user } = useContext(AuthContext);
+  useContext(AuthContext);
   const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
@@ -65,7 +65,7 @@ const PostPartner = () => {
       newUrls[index] = data.url;
       setImageUrls(newUrls);
       setUploadingIndex(null);
-    } catch (err) {
+    } catch (_err) {
       setError('Image upload failed. Please try again.');
       setUploadingIndex(null);
       const newPrevs = [...imagePreviews];

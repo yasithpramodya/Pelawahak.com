@@ -1,21 +1,22 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 import api from '../services/api';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  // Initialize user from local storage token
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    const token = localStorage.getItem('token');
-    if (storedUser && token) {
-      setUser(JSON.parse(storedUser));
+  // Initialize synchronously from localStorage — avoids setState-in-effect warning
+  const [user, setUser] = useState(() => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      const token = localStorage.getItem('token');
+      if (storedUser && token) return JSON.parse(storedUser);
+    } catch {
+      // ignore malformed stored data
     }
-    setLoading(false);
-  }, []);
+    return null;
+  });
+  // loading is false immediately because initialization is synchronous
+  const [loading] = useState(false);
 
   const login = async (email, password) => {
     const res = await api.post('/auth/login', { email, password });
@@ -57,15 +58,6 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
-  };
-
-  const refreshUser = async () => {
-    try {
-      // Assuming a GET /api/auth/me route exists, or we use a basic fetch if not.
-      // Alternatively, we can just take updated user data passed to this function.
-    } catch (error) {
-      console.error('Error refreshing user', error);
-    }
   };
 
   const updateUserState = (newUserData) => {

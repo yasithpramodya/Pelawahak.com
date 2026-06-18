@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { useAuthStore } from '../store/authStore';
 import { getImageUrl, BASE_URL } from '../services/api';
 
 export default function SeekingPartner() {

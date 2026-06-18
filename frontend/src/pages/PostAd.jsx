@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import api from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -78,7 +78,7 @@ const PostAd = () => {
     setImageUrls(newUrls);
 
     setUploadingIndex(null);
-  } catch (err) {
+  } catch (_err) {
     setError('Image upload failed. Please try again.');
     setUploadingIndex(null);
 
@@ -148,7 +148,7 @@ const PostAd = () => {
   });
 
     try {
-      const res = await api.post('/ads', data);
+      const _res = await api.post('/ads', data);
 
       // We should ideally fetch the fresh user from backend here, but for now we manually
       // adjust local state. If they used a free ad, decrement it. If paid, decrement paid.

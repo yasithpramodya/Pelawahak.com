@@ -18,8 +18,8 @@ const AdminPanel = () => {
       ]);
       setAds(adsRes.data);
       setPartners(partnersRes.data);
-    } catch (error) {
-      console.error('Error fetching admin data', error);
+    } catch (_error) {
+      console.error('Error fetching admin data', _error);
       setMessage({ text: 'Failed to fetch listings', type: 'error' });
     } finally {
       setLoading(false);
@@ -37,7 +37,7 @@ const AdminPanel = () => {
       await api.put(`/admin/ads/${id}/${action}`);
       setMessage({ text: `Ad successfully ${action}ed!`, type: 'success' });
       fetchData();
-    } catch (error) {
+    } catch (_error) {
       setMessage({ text: `Failed to ${action} ad`, type: 'error' });
     }
   };
@@ -48,7 +48,7 @@ const AdminPanel = () => {
       await api.delete(`/admin/ads/${id}`);
       setMessage({ text: 'Ad deleted forever.', type: 'success' });
       fetchData();
-    } catch (error) {
+    } catch (_error) {
       setMessage({ text: 'Delete failed.', type: 'error' });
     }
   };
@@ -60,7 +60,7 @@ const AdminPanel = () => {
       await api.put(`/admin/partners/${id}/${action}`);
       setMessage({ text: `Profile successfully ${action}ed!`, type: 'success' });
       fetchData();
-    } catch (error) {
+    } catch (_error) {
       setMessage({ text: `Failed to ${action} profile`, type: 'error' });
     }
   };
@@ -71,7 +71,7 @@ const AdminPanel = () => {
       await api.delete(`/admin/partners/${id}`);
       setMessage({ text: 'Profile deleted forever.', type: 'success' });
       fetchData();
-    } catch (error) {
+    } catch (_error) {
       setMessage({ text: 'Delete failed.', type: 'error' });
     }
   };

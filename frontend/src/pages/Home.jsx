@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import api from '../services/api';
 import AdCard from '../components/AdCard';
 import PartnerCard from '../components/PartnerCard';
-import { locations } from '../data/locations';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
@@ -32,7 +31,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [partnersLoading, setPartnersLoading] = useState(true);
   const [category, setCategory] = useState('');
-  const [district, setDistrict] = useState('');
+  const [district] = useState('');
   const [search, setSearch] = useState('');
 
   const scrollRef = useRef([]);
