@@ -76,3 +76,9 @@ firebase-debug.log
 *.gemini/
 skills-lock.json
 frontend/skills-lock.json
+
+# ================================
+# PM2 ecosystem (contains secrets — keep on server only)
+# ================================
+backend/ecosystem.config.js
+ecosystem.config.js
