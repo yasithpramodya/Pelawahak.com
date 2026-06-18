@@ -63,7 +63,10 @@ const Login = () => {
             />
           </div>
           <div className="space-y-4">
-            <label className="block text-[10px] font-black text-dark-grey/60 uppercase tracking-widest ml-2">Private Password</label>
+            <div className="flex justify-between items-center ml-2">
+              <label className="block text-[10px] font-black text-dark-grey/60 uppercase tracking-widest">Private Password</label>
+              <Link to="/forgot-password" className="text-[9px] font-black text-primary-rose hover:text-near-black transition-colors uppercase tracking-widest underline decoration-primary-rose/30 underline-offset-4">Forgot Password?</Link>
+            </div>
             <input 
               type="password" 
               className="w-full bg-warm-white border-none rounded-2xl p-5 text-xs font-bold text-near-black focus:ring-2 focus:ring-primary-rose transition-all" 

@@ -68,3 +68,11 @@ Thumbs.db
 *.pem
 .firebase/
 firebase-debug.log
+
+# ================================
+# Agent-specific files
+# ================================
+.agents/
+*.gemini/
+skills-lock.json
+frontend/skills-lock.json
