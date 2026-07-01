@@ -15,23 +15,23 @@ const PLAN_DETAILS = {
   basic: {
     name: 'Basic',
     price: 2.99,
-    ads: 10,
-    description: 'Billed monthly',
-    features: ['10 Ads per Month', 'Standard Placement', 'Basic Analytics', 'Priority Support'],
+    ads: 5,
+    description: 'Billed weekly',
+    features: ['5 Ads per Week', '1 Week Partner Profile Views', 'Standard Placement', 'Basic Analytics', 'Priority Support'],
   },
   standard: {
     name: 'Standard',
     price: 5.99,
-    ads: 30,
+    ads: 20,
     description: 'Billed monthly',
-    features: ['30 Ads per Month', 'Featured Placement', 'Advanced Analytics', 'Priority Support'],
+    features: ['20 Ads per Month', '1 Month Partner Profile Views', 'Featured Placement', 'Advanced Analytics', 'Priority Support'],
   },
   premium: {
     name: 'Premium',
     price: 9.99,
     ads: 'Unlimited',
-    description: 'Billed monthly',
-    features: ['Unlimited Ads', 'Top Tier Placement', 'Advanced Analytics', '24/7 Dedicated Support', 'Verified Badge'],
+    description: 'Billed yearly',
+    features: ['1 Year Ad Listings', 'Unlimited Partner Profile Views (1 Year)', 'Top Tier Placement', 'Advanced Analytics', '24/7 Dedicated Support', 'Verified Badge'],
   }
 };
 
