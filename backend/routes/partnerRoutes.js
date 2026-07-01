@@ -86,8 +86,14 @@ router.get('/', async (req, res) => {
             if (user.role === 'admin') {
               isAdmin = true;
             } else {
-              const unlocks = await PartnerUnlock.find({ user: userId, status: 'completed' });
-              unlockedPartnerIds = new Set(unlocks.map(u => u.partner.toString()));
+              // Subscription plan unlocks all profiles within its viewing window
+              const hasActivePlanView = user.profileViewEndsAt && new Date() < new Date(user.profileViewEndsAt);
+              if (hasActivePlanView) {
+                isAdmin = true; // treat as fully unlocked
+              } else {
+                const unlocks = await PartnerUnlock.find({ user: userId, status: 'completed' });
+                unlockedPartnerIds = new Set(unlocks.map(u => u.partner.toString()));
+              }
             }
           }
         }
@@ -161,12 +167,18 @@ router.get('/:id', async (req, res) => {
         if (userId) {
           const user = await User.findById(userId);
           if (user) {
-            if (user.role === 'admin' || (partner.user && partner.user._id.toString() === userId.toString())) {
+            const isOwnerOrAdmin = user.role === 'admin' || (partner.user && partner.user._id.toString() === userId.toString());
+            if (isOwnerOrAdmin) {
               unlocked = true;
             } else {
-              const unlock = await PartnerUnlock.findOne({ user: userId, partner: partner._id, status: 'completed' });
-              if (unlock) {
+              // Subscription plan: check if profile viewing window is active
+              const hasActivePlanView = user.profileViewEndsAt && new Date() < new Date(user.profileViewEndsAt);
+              if (hasActivePlanView) {
                 unlocked = true;
+              } else {
+                // Fallback: per-profile one-time unlock
+                const unlock = await PartnerUnlock.findOne({ user: userId, partner: partner._id, status: 'completed' });
+                if (unlock) unlocked = true;
               }
             }
           }

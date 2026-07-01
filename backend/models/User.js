@@ -35,6 +35,10 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  profileViewEndsAt: {
+    type: Date,
+    default: null,
+  },
   resetPasswordToken: {
     type: String,
   },

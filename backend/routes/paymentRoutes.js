@@ -228,10 +228,30 @@ const PLAN_PRICES = {
   premium: 9.99
 };
 const PLAN_ADS = {
-  basic: 10,
-  standard: 30,
+  basic: 5,
+  standard: 20,
   premium: 999999 // Representing unlimited
 };
+
+// Subscription durations per plan
+const PLAN_DURATION = {
+  basic: { weeks: 1 },
+  standard: { months: 1 },
+  premium: { years: 1 }
+};
+
+function getSubscriptionEndDate(plan) {
+  const now = new Date();
+  const duration = PLAN_DURATION[plan];
+  if (duration.weeks) {
+    now.setDate(now.getDate() + 7 * duration.weeks);
+  } else if (duration.months) {
+    now.setMonth(now.getMonth() + duration.months);
+  } else if (duration.years) {
+    now.setFullYear(now.getFullYear() + duration.years);
+  }
+  return now;
+}
 
 // @desc    Create a PayPal order to buy a single ad slot
 // @route   POST /api/payments/buy-ad-slot
@@ -316,15 +336,15 @@ router.post('/capture-subscription/:plan', protect, async (req, res) => {
       return res.status(400).json({ message: 'Payment capture was not completed', paypalStatus: captureResult.status });
     }
 
-    const oneMonthFromNow = new Date();
-    oneMonthFromNow.setMonth(oneMonthFromNow.getMonth() + 1);
+    const subscriptionEndsAt = getSubscriptionEndDate(plan);
 
     const updatedUser = await User.findByIdAndUpdate(
       req.user._id,
       { 
         subscriptionPlan: plan,
-        subscriptionEndsAt: oneMonthFromNow,
-        freeAdsRemaining: PLAN_ADS[plan] // Reset their quota based on plan
+        subscriptionEndsAt,
+        profileViewEndsAt: subscriptionEndsAt, // Grant partner profile viewing for same period
+        freeAdsRemaining: PLAN_ADS[plan] // Reset their ad quota based on plan
       },
       { new: true }
     );
